@@ -2,20 +2,29 @@
     "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
     "contentVersion": "1.0.0.0",
     "parameters": {
+        "defaultResourceNamePrefix": {
+            "type": "string",
+            "metadata": {
+                "description": "Default prefix for all resources - can be overridden"
+            }
+        },
         "functionAppName": {
             "type": "string",
+            "defaultValue": "[concat(parameters('defaultResourceNamePrefix'), 'func')]",
             "metadata": {
                 "description": "description"
             }
         },
         "webAppName": {
             "type": "string",
+            "defaultValue": "[concat(parameters('defaultResourceNamePrefix'), 'api')]",
             "metadata": {
                 "description": "description"
             }
         },
         "storageAccountName": {
             "type": "string",
+            "defaultValue": "[concat(parameters('defaultResourceNamePrefix'), 'sta', uniqueString(resourceGroup().name))]",
             "maxLength": 24,
             "metadata": {
                 "description": "Name of the Storage account"
@@ -23,24 +32,35 @@
         },
         "cosmosAccountName": {
             "type": "string",
+            "defaultValue": "[concat(parameters('defaultResourceNamePrefix'), 'cosmos')]",
             "metadata": {
                 "description": "Name of the Cosmos account"
             }
         },
         "cosmosDatabaseName": {
             "type": "string",
+            "defaultValue": "media",
             "metadata": {
                 "description": "Name of the Cosmos database"
             }
         },
         "cosmosCollectionName": {
             "type": "string",
+            "defaultValue": "metadata",
             "metadata": {
                 "description": "Name of the Cosmos collection"
             }
         },
         "applicationInsightsName": {
             "type": "string",
+            "defaultValue": "[concat(parameters('defaultResourceNamePrefix'), 'insights')]",
+            "metadata": {
+                "description": "description"
+            }
+        },
+        "cognitiveServiceName": {
+            "type": "string",
+            "defaultValue": "[concat(parameters('defaultResourceNamePrefix'), 'ai')]",
             "metadata": {
                 "description": "description"
             }
@@ -48,7 +68,10 @@
     },
     "variables": {
         "functionStorageAccountName": "[concat(parameters('functionAppName'), uniqueString(resourceGroup().name))]",
-        "functionAppHostingPlanName": "[concat(parameters('functionAppName'), '-hosting-plan')]"
+        "functionAppHostingPlanName": "[concat(parameters('functionAppName'), '-hosting-plan')]",
+        "webAppHostingPlanName": "[concat(parameters('webAppName'), '-hosting-plan')]",
+        "webAppSku": "P1v2",
+        "cognitiveServiceSku": "S0"
     },
     "resources": [
         {
@@ -168,7 +191,7 @@
                 "name": "Standard_LRS"
             }
         },
-        {  
+        {
             "type": "Microsoft.Web/serverfarms",
             "apiVersion": "2018-02-01",
             "name":"[variables('functionAppHostingPlanName')]",
@@ -229,6 +252,45 @@
                         }
                     ]
                 }
+            }
+        },
+        {
+            "type": "Microsoft.Web/serverfarms",
+            "apiVersion": "2020-06-01",
+            "name":"[variables('webAppHostingPlanName')]",
+            "location":"[resourceGroup().location]",
+            "properties":{
+                "name":"[variables('webAppHostingPlanName')]"
+            },
+            "sku":{
+                "name":"[variables('webAppSku')]",
+                "capacity": 1
+            }
+        },
+        {
+            "name": "[parameters('webAppName')]",
+            "type": "Microsoft.Web/sites",
+            "apiVersion": "2018-11-01",
+            "location": "[resourceGroup().location]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/serverfarms', variables('webAppHostingPlanName'))]"
+            ],
+            "properties": {
+                "name": "[parameters('webAppName')]",
+                "serverFarmId": "[resourceId('Microsoft.Web/serverfarms', variables('webAppHostingPlanName'))]"
+            }
+        },
+        {
+            "type": "Microsoft.CognitiveServices/accounts",
+            "apiVersion": "2017-04-18",
+            "name": "[parameters('cognitiveServiceName')]",
+            "location": "[resourceGroup().location]",
+            "sku": {
+                "name": "[variables('cognitiveServiceSku')]"
+            },
+            "kind": "CognitiveServices",
+            "properties": {
+                "statisticsEnabled": false
             }
         }
     ],

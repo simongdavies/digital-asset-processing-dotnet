@@ -11,9 +11,9 @@ namespace function
     {
         [FunctionName("CosmosDBTrigger")]
         public static void Run([CosmosDBTrigger(
-            databaseName: "databaseName",
-            collectionName: "collectionName",
-            ConnectionStringSetting = "",
+            databaseName: "dev",
+            collectionName: "files",
+            ConnectionStringSetting = "AzureWebJobsStorage",
             LeaseCollectionName = "leases")]IReadOnlyList<Document> input, ILogger log)
         {
             if (input != null && input.Count > 0)

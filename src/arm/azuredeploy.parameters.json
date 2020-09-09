@@ -4,6 +4,24 @@
     "parameters": {
         "storageAccountName": {
             "value": "zdemosta"
+        },
+        "cosmosAccountName": {
+            "value": "zdemocosmos"
+        },
+        "cosmosCollectionName": {
+            "value": "metadata"
+        },
+        "cosmosDatabaseName": {
+            "value": "media"
+        },
+        "applicationInsightsName": {
+            "value": "zdemoinsights"
+        },
+        "functionAppName": {
+            "value": "zdemofunc"
+        },
+        "webAppName": {
+            "value": "zdemoapi"
         }
     }
 }

@@ -9,5 +9,7 @@ namespace webapi
         public string displayName { get; set; }
 
         public string filePath { get; set; }
+
+        public DateTime recordedAt { get; set; }
     }
 }

@@ -11,7 +11,19 @@
                 "/property:GenerateFullPaths=true",
                 "/consoleloggerparameters:NoSummary"
             ],
-            "problemMatcher": "$msCompile"
+            "problemMatcher": "$msCompile",
+        },
+        {   "label": "func",
+            "command": "func",
+            "type": "process",
+            "isBackground": true,
+            "options": {},
+            "args": [
+                "start",
+                "--script-root",
+                "${workspaceFolder}/src/function/"
+            ]
+
         },
         {
             "label": "publish",

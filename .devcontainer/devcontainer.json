@@ -3,7 +3,7 @@
 {
 	"name": "Azure Functions & C# (.NET Core 3.1)",
 	"dockerFile": "Dockerfile",
-	"forwardPorts": [ 7071 ],
+	"forwardPorts": [ 7071, 5001 ],
 
 	// Set *default* container specific settings.json values on container create.
 	"settings": {

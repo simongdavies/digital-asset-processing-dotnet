@@ -1,6 +1,6 @@
 # Welcome to the WebAPI-CosmosDB-Storage-Functions accelerator
 
-![](docs/img/acceleratordiagram.png)
+![Accelerator diagram](docs/img/acceleratordiagram.png)
 
 This accelerator provides you with the following components:
 - A HTTP based WebAPI
@@ -31,7 +31,7 @@ This accelerator is not a good fit if you want to orchestrate longer running wor
 
 ## Accelerator Introduction Video
 
-![](docs/img/videopreview.png)
+![Overview video preview](docs/img/videopreview.png)
 
 ## Available versions
 

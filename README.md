@@ -8,7 +8,7 @@ This accelerator provides you with the following components:
 
 ## Recommended usage
 
-This accelerator pattern is a good fit for scenarios where you want to buid a backend system to receive, process and store any type of data.
+This accelerator pattern is a good fit for scenarios where you want to build a backend system to receive, process and store any type of data.
 
 A good example use-case is to retrieve audio files, which you want to anaylaze using an external service like Cognitive Services and store the audiofiles together with metadata for further analytic scenarios.
 

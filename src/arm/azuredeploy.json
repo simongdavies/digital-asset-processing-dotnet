@@ -1,0 +1,298 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "defaultResourceNamePrefix": {
+            "type": "string",
+            "metadata": {
+                "description": "Default prefix for all resources - can be overridden"
+            }
+        },
+        "functionAppName": {
+            "type": "string",
+            "defaultValue": "[concat(parameters('defaultResourceNamePrefix'), 'func')]",
+            "metadata": {
+                "description": "description"
+            }
+        },
+        "webAppName": {
+            "type": "string",
+            "defaultValue": "[concat(parameters('defaultResourceNamePrefix'), 'api')]",
+            "metadata": {
+                "description": "description"
+            }
+        },
+        "storageAccountName": {
+            "type": "string",
+            "defaultValue": "[concat(parameters('defaultResourceNamePrefix'), 'sta', uniqueString(resourceGroup().name))]",
+            "maxLength": 24,
+            "metadata": {
+                "description": "Name of the Storage account"
+            }
+        },
+        "cosmosAccountName": {
+            "type": "string",
+            "defaultValue": "[concat(parameters('defaultResourceNamePrefix'), 'cosmos')]",
+            "metadata": {
+                "description": "Name of the Cosmos account"
+            }
+        },
+        "cosmosDatabaseName": {
+            "type": "string",
+            "defaultValue": "media",
+            "metadata": {
+                "description": "Name of the Cosmos database"
+            }
+        },
+        "cosmosCollectionName": {
+            "type": "string",
+            "defaultValue": "metadata",
+            "metadata": {
+                "description": "Name of the Cosmos collection"
+            }
+        },
+        "applicationInsightsName": {
+            "type": "string",
+            "defaultValue": "[concat(parameters('defaultResourceNamePrefix'), 'insights')]",
+            "metadata": {
+                "description": "description"
+            }
+        },
+        "cognitiveServiceName": {
+            "type": "string",
+            "defaultValue": "[concat(parameters('defaultResourceNamePrefix'), 'ai')]",
+            "metadata": {
+                "description": "description"
+            }
+        }
+    },
+    "variables": {
+        "functionStorageAccountName": "[concat(parameters('functionAppName'), uniqueString(resourceGroup().name))]",
+        "functionAppHostingPlanName": "[concat(parameters('functionAppName'), '-hosting-plan')]",
+        "webAppHostingPlanName": "[concat(parameters('webAppName'), '-hosting-plan')]",
+        "webAppSku": "P1v2",
+        "cognitiveServiceSku": "S0"
+    },
+    "resources": [
+        {
+            "name": "[parameters('storageAccountName')]",
+            "type": "Microsoft.Storage/storageAccounts",
+            "apiVersion": "2019-06-01",
+            "tags": {
+                "displayName": "[parameters('storageAccountName')]"
+            },
+            "location": "[resourceGroup().location]",
+            "kind": "StorageV2",
+            "sku": {
+                "name": "Standard_LRS"
+            }
+        },
+        {
+            "name": "[parameters('cosmosAccountName')]",
+            "type": "Microsoft.DocumentDB/databaseAccounts",
+            "apiVersion": "2020-04-01",
+            "location": "[resourceGroup().location]",
+            "tags": {
+            },
+            "kind": "GlobalDocumentDB",
+            "properties": {
+                "consistencyPolicy": {
+                    "defaultConsistencyLevel": "Eventual",
+                    "maxStalenessPrefix": 1,
+                    "maxIntervalInSeconds": 5
+                },
+                "locations": [
+                    {
+                        "locationName": "[resourceGroup().location]",
+                        "failoverPriority": 0
+                    }
+                ],
+                "databaseAccountOfferType": "Standard",
+                "enableAutomaticFailover": true
+            }
+        },
+        {
+            "type": "Microsoft.DocumentDB/databaseAccounts/sqlDatabases",
+            "name": "[concat(parameters('cosmosAccountName'), '/', parameters('cosmosDatabaseName'))]",
+            "apiVersion": "2020-04-01",
+            "dependsOn": [
+                "[resourceId('Microsoft.DocumentDB/databaseAccounts/', parameters('cosmosAccountName'))]"
+            ],
+            "properties": {
+                "resource": {
+                    "id": "[parameters('cosmosDatabaseName')]"
+                },
+                "options": {
+                    "throughput": 400
+                }
+            }
+        },
+        {
+            "type": "Microsoft.DocumentDb/databaseAccounts/sqlDatabases/containers",
+            "name": "[concat(parameters('cosmosAccountName'), '/', parameters('cosmosDatabaseName'), '/', parameters('cosmosCollectionName'))]",
+            "apiVersion": "2020-04-01",
+            "dependsOn": [
+                "[resourceId('Microsoft.DocumentDB/databaseAccounts/sqlDatabases', parameters('cosmosAccountName'), parameters('cosmosDatabaseName'))]"
+            ],
+            "properties": {
+                "resource": {
+                    "id": "[parameters('cosmosCollectionName')]",
+                    "partitionKey": {
+                        "paths": [
+                            "/filePath"
+                        ],
+                        "kind": "hash"
+                    },
+                    "indexingPolicy": {
+                        "indexingMode": "consistent",
+                        "includedPaths": [
+                            {
+                                "path": "/*",
+                                "indexes": [
+                                    {
+                                        "kind": "Hash",
+                                        "dataType": "String",
+                                        "precision": -1
+                                    }
+                                ]
+                            }
+                        ],
+                        "excludedPaths": [
+                            {
+                                "path": "/PathToNotIndex/*"
+                            }
+                        ]
+                    }
+                },
+                "options": {
+                }
+            }
+        },
+        {
+            "name": "[parameters('applicationInsightsName')]",
+            "type": "Microsoft.Insights/components",
+            "apiVersion": "2020-02-02-preview",
+            "location": "[resourceGroup().location]",
+            "kind": "web",
+            "properties": {
+                "Application_Type": "web"
+            }
+        },
+        {
+            "name": "[variables('functionStorageAccountName')]",
+            "type": "Microsoft.Storage/storageAccounts",
+            "apiVersion": "2019-06-01",
+            "tags": {
+                "displayName": "[variables('functionStorageAccountName')]"
+            },
+            "location": "[resourceGroup().location]",
+            "kind": "StorageV2",
+            "sku": {
+                "name": "Standard_LRS"
+            }
+        },
+        {
+            "type": "Microsoft.Web/serverfarms",
+            "apiVersion": "2018-02-01",
+            "name":"[variables('functionAppHostingPlanName')]",
+            "location":"[resourceGroup().location]",
+            "properties":{  
+                "name":"[variables('functionAppHostingPlanName')]",
+                "computeMode":"Dynamic"
+            },
+            "sku":{
+                "name":"Y1",
+                "tier":"Dynamic",
+                "size":"Y1",
+                "family":"Y",
+                "capacity":0
+            }
+        },
+        {
+            "name": "[parameters('functionAppName')]",
+            "type": "Microsoft.Web/sites",
+            "apiVersion": "2018-11-01",
+            "location": "[resourceGroup().location]",
+            "kind": "functionapp",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/serverfarms', variables('functionAppHostingPlanName'))]",
+                "[resourceId('Microsoft.Storage/storageAccounts', variables('functionStorageAccountName'))]"
+            ],
+            "properties": {
+                "serverFarmId": "[resourceId('Microsoft.Web/serverfarms', variables('functionAppHostingPlanName'))]",
+                "siteConfig": {
+                    "appSettings": [
+                        {
+                            "name": "AzureWebJobsDashboard",
+                            "value": "[concat('DefaultEndpointsProtocol=https;AccountName=', variables('functionStorageAccountName'), ';AccountKey=', listKeys(resourceId('Microsoft.Storage/storageAccounts', variables('functionStorageAccountName')),'2019-06-01').keys[0].value)]"
+                        },
+                        {
+                            "name": "AzureWebJobsStorage",
+                            "value": "[concat('DefaultEndpointsProtocol=https;AccountName=', variables('functionStorageAccountName'), ';AccountKey=', listKeys(resourceId('Microsoft.Storage/storageAccounts', variables('functionStorageAccountName')),'2019-06-01').keys[0].value)]"
+                        },
+                        {
+                            "name": "WEBSITE_CONTENTAZUREFILECONNECTIONSTRING",
+                            "value": "[concat('DefaultEndpointsProtocol=https;AccountName=', variables('functionStorageAccountName'), ';AccountKey=', listKeys(resourceId('Microsoft.Storage/storageAccounts', variables('functionStorageAccountName')),'2019-06-01').keys[0].value)]"
+                        },
+                        {
+                            "name": "WEBSITE_CONTENTSHARE",
+                            "value": "[toLower(parameters('functionAppName'))]"
+                        },
+                        {
+                            "name": "FUNCTIONS_EXTENSION_VERSION",
+                            "value": "~3"
+                        },
+                        {
+                            "name": "APPINSIGHTS_INSTRUMENTATIONKEY",
+                            "value": "[reference(resourceId('microsoft.insights/components/', parameters('applicationInsightsName')), '2020-02-02-preview').InstrumentationKey]"
+                        },
+                        {
+                            "name": "FUNCTIONS_WORKER_RUNTIME",
+                            "value": "dotnet"
+                        }
+                    ]
+                }
+            }
+        },
+        {
+            "type": "Microsoft.Web/serverfarms",
+            "apiVersion": "2020-06-01",
+            "name":"[variables('webAppHostingPlanName')]",
+            "location":"[resourceGroup().location]",
+            "properties":{
+                "name":"[variables('webAppHostingPlanName')]"
+            },
+            "sku":{
+                "name":"[variables('webAppSku')]",
+                "capacity": 1
+            }
+        },
+        {
+            "name": "[parameters('webAppName')]",
+            "type": "Microsoft.Web/sites",
+            "apiVersion": "2018-11-01",
+            "location": "[resourceGroup().location]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/serverfarms', variables('webAppHostingPlanName'))]"
+            ],
+            "properties": {
+                "name": "[parameters('webAppName')]",
+                "serverFarmId": "[resourceId('Microsoft.Web/serverfarms', variables('webAppHostingPlanName'))]"
+            }
+        },
+        {
+            "type": "Microsoft.CognitiveServices/accounts",
+            "apiVersion": "2017-04-18",
+            "name": "[parameters('cognitiveServiceName')]",
+            "location": "[resourceGroup().location]",
+            "sku": {
+                "name": "[variables('cognitiveServiceSku')]"
+            },
+            "kind": "CognitiveServices",
+            "properties": {
+                "statisticsEnabled": false
+            }
+        }
+    ],
+    "outputs": {}
+}

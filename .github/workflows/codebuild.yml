@@ -2,6 +2,7 @@ name: .NET Core
 
 env:
   AZURE_WEBAPP_NAME: jzdemoapi
+  AZURE_FUNCTIONAPP_NAME: 
 
 on:
   push:
@@ -38,45 +39,67 @@ jobs:
         path: './output/webapi'
 
   build-function:
-      name: 'Build Function'
-      runs-on: ubuntu-latest
+    name: 'Build Function'
+    runs-on: ubuntu-latest
 
-      steps:
-      - uses: actions/checkout@v2
-      - name: Setup .NET Core
-        uses: actions/setup-dotnet@v1
-        with:
-          dotnet-version: 3.1.301
-      - name: Install dependencies
-        run: dotnet restore './src/function/function.csproj'
-      - name: Build
-        run: dotnet build --configuration Release --no-restore --output './output/function' './src/function/function.csproj'
-      - name: Test
-        run: dotnet test --no-restore --verbosity normal --output './output/function' './src/function/function.csproj'
-      - name: Upload Artifact 
-        uses: actions/upload-artifact@v2
-        with:
-          name: function
-          path: './output/function'
+    steps:
+    - uses: actions/checkout@v2
+    - name: Setup .NET Core
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: 3.1.301
+    - name: Install dependencies
+      run: dotnet restore './src/function/function.csproj'
+    - name: Build
+      run: dotnet build --configuration Release --no-restore --output './output/function' './src/function/function.csproj'
+    - name: Test
+      run: dotnet test --no-restore --verbosity normal --output './output/function' './src/function/function.csproj'
+    - name: Upload Artifact 
+      uses: actions/upload-artifact@v2
+      with:
+        name: function
+        path: './output/function'
 
   deploy-webapi:
-      name: Deploy webapi
-      runs-on: ubuntu-latest
-      needs: build-webapi
+    name: Deploy Web Api
+    runs-on: ubuntu-latest
+    needs: build-webapi
 
-      steps:
-      - name: Download Artifact
-        uses: actions/download-artifact@v2
-        with:
-          name: webapi
-          path: ./output/webapi
+    steps:
+    - name: Download Artifact
+      uses: actions/download-artifact@v2
+      with:
+        name: webapi
+        path: ./output/webapi
 
-      - uses: azure/login@v1.1
-        with:
-          creds: ${{ secrets.AZURE_CREDENTIALS }}
+    - uses: azure/login@v1.1
+      with:
+        creds: ${{ secrets.AZURE_CREDENTIALS }}
 
-      - name: 'Run Azure webapp deploy action using publish profile credentials'
-        uses: azure/webapps-deploy@v2
-        with: 
-          app-name: ${{ env.AZURE_WEBAPP_NAME }} # Replace with your app name
-          package: './output/webapi'
+    - name: 'Run Azure WebApp Action'
+      uses: azure/webapps-deploy@v2
+      with: 
+        app-name: ${{ env.AZURE_WEBAPP_NAME }} # Replace with your app name
+        package: './output/webapi'
+
+  deploy-webapi:
+    name: Deploy Function
+    runs-on: ubuntu-latest
+    needs: build-function
+
+    steps:
+    - name: Download Artifact
+      uses: actions/download-artifact@v2
+      with:
+        name: function
+        path: './output/function'
+
+    - uses: azure/login@v1.1
+      with:
+        creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+    - name: 'Run Azure Functions Action'
+      uses: Azure/functions-action@v1
+      with:
+        app-name: ${{ env.AZURE_FUNCTIONAPP_NAME }}
+        package: './output/function'

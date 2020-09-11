@@ -19,7 +19,7 @@ jobs:
     - name: Setup .NET Core
       uses: actions/setup-dotnet@v1
       with:
-        dotnet-version: 3.1.301
+        dotnet-version: 3.1.402
     - name: Install dependencies
       run: dotnet restore './src/webapi/webapi.csproj'
     - name: Build
@@ -50,3 +50,8 @@ jobs:
         run: dotnet build --configuration Release --no-restore --output './output/function' './src/function/function.csproj'
       - name: Test
         run: dotnet test --no-restore --verbosity normal --output './output/function' './src/function/function.csproj'
+      - name: Upload Artifact 
+        uses: actions/upload-artifact@v2
+        with:
+          name: function
+          path: './output/function'

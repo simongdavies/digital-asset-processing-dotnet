@@ -52,33 +52,30 @@ namespace webapi.Controllers
             _storageConnectionString = $"DefaultEndpointsProtocol=https;AccountName={ _configuration["Storage:AccountName"] };AccountKey={ _configuration["Storage:PrimaryKey"] };EndpointSuffix=core.windows.net";
             this.cosmosClient = new CosmosClient(_endpointUrl, _primaryKey);
             this.database = this.cosmosClient.CreateDatabaseIfNotExistsAsync(_databaseId).Result;
-            this.container = this.database.CreateContainerIfNotExistsAsync(_containerId, "/filePath").Result;
+            this.container = this.database.CreateContainerIfNotExistsAsync(_containerId, "/id").Result;
         }
 
         [HttpGet]
-        public MyData Get()
+        public MyData Get(string id)
+        {
+            ItemResponse<MyData> myData = this.container.ReadItemAsync<MyData>(id, new PartitionKey(id)).Result;
+            return myData;
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Post(string name, IFormFile myFile)
         {
             var rng = new Random();
             var myData =  new MyData
             {
                 id = Guid.NewGuid().ToString("N"),
-                filePath = "media.mp3"
+                displayName = name,
+                filePath = myFile.FileName
             };
 
-            ItemResponse<MyData> myDataFile = this.container.CreateItemAsync<MyData>(myData, new PartitionKey(myData.filePath)).Result;
-            return myData;
-        }
+            ItemResponse<MyData> myDataFile = this.container.CreateItemAsync<MyData>(myData, new PartitionKey(myData.id)).Result;
 
-        [HttpPost]
-        public async Task<IActionResult> UploadFile(IFormFile myFile)
-        {
-            // using (var fileContentStream = new MemoryStream())
-            // {  
-            //     await myFile.CopyToAsync(fileContentStream);
-            //     await System.IO.File.WriteAllBytesAsync(Path.Combine(folderPath, myFile.FileName), fileContentStream.ToArray());
-            // }  
-
-            return Ok($"File is uploaded Successfully");
+            return Ok($"Record with id: {myData.id} created.");
         }
     }
 }

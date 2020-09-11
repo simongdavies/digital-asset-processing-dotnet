@@ -75,7 +75,7 @@ namespace webapi.Controllers
         }
 
         [HttpPost]
-        public IActionResult Post(string name, IFormFile myFile)
+        public IActionResult Post(string name, string locationRecorded, IFormFile myFile)
         {
             string fileId = Guid.NewGuid().ToString("N");
 
@@ -86,7 +86,8 @@ namespace webapi.Controllers
             {
                 id = fileId,
                 displayName = name,
-                filePath = blobClient.Uri.AbsoluteUri
+                filePath = blobClient.Uri.AbsoluteUri,
+                locationRecorded = locationRecorded
             };
 
             ItemResponse<MyData> myDataFile = this.container.CreateItemAsync<MyData>(myData, new PartitionKey(myData.id)).Result;

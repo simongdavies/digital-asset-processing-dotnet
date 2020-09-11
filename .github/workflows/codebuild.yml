@@ -12,7 +12,7 @@ on:
 jobs:
   build-webapi:
     name: 'Build Web Api'
-    runs-on: windows-latest
+    runs-on: ubuntu-latest
 
     steps:
     - uses: actions/checkout@v2
@@ -20,14 +20,14 @@ jobs:
       uses: actions/setup-dotnet@v1
       with:
         dotnet-version: 3.1.402
-    - name: Install dependencies
-      run: dotnet restore './src/webapi/webapi.csproj'
-    - name: Build
-      run: dotnet build --configuration Release --no-restore './src/webapi/webapi.csproj'
-    - name: Test
-      run: dotnet test --no-restore --verbosity normal './src/webapi/webapi.csproj'
+    # - name: Install dependencies
+    #   run: dotnet restore './src/webapi/webapi.csproj'
+    # - name: Build
+    #   run: dotnet build --configuration Release --no-restore './src/webapi/webapi.csproj'
+    # - name: Test
+    #   run: dotnet test --no-restore --verbosity normal './src/webapi/webapi.csproj'
     - name: Publish
-      run: dotnet publish --no-build --output './output/webapi' './src/webapi/webapi.csproj'
+      run: dotnet publish --output './output/webapi/' './src/webapi/webapi.csproj'
     - name: Upload Artifact 
       uses: actions/upload-artifact@v2
       with:

@@ -13,7 +13,7 @@ namespace function
         public static void Run([CosmosDBTrigger(
             databaseName: "media",
             collectionName: "metadata",
-            ConnectionStringSetting = "AzureWebJobsStorage",
+            ConnectionStringSetting = "CosmosDBConnection",
             LeaseCollectionName = "leases",
             CreateLeaseCollectionIfNotExists=true)]IReadOnlyList<Document> input, ILogger log)
         {

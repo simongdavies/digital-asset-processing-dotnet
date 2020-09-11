@@ -36,10 +36,11 @@ namespace webapi.Controllers
         private string _databaseId;
         private string _containerId;
 
+        private string _storageConnectionString;
         private readonly ILogger<MyDataController> _logger;
         private readonly IConfiguration _configuration;
-        const String folderName = "files";  
-        readonly String folderPath = Path.Combine(Directory.GetCurrentDirectory(), folderName);  
+        const String folderName = "files";
+        readonly String folderPath = Path.Combine(Directory.GetCurrentDirectory(), folderName);
         public MyDataController(ILogger<MyDataController> logger, IConfiguration configuration)
         {
             _logger = logger;
@@ -48,6 +49,7 @@ namespace webapi.Controllers
             _primaryKey = _configuration["Cosmos:PrimaryKey"];
             _databaseId = _configuration["Cosmos:DatabaseId"];
             _containerId = _configuration["Cosmos:ContainerId"];
+            _storageConnectionString = $"DefaultEndpointsProtocol=https;AccountName={ _configuration["Storage:AccountName"] };AccountKey={ _configuration["Storage:PrimaryKey"] };EndpointSuffix=core.windows.net";
             this.cosmosClient = new CosmosClient(_endpointUrl, _primaryKey);
             this.database = this.cosmosClient.CreateDatabaseIfNotExistsAsync(_databaseId).Result;
             this.container = this.database.CreateContainerIfNotExistsAsync(_containerId, "/filePath").Result;

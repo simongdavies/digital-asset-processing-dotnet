@@ -1,8 +1,8 @@
 name: Build and deploy dev
 
 env:
-  AZURE_WEBAPP_NAME: jzdemoapi-dev
-  AZURE_FUNCTIONAPP_NAME: jzdemofunc-dev
+  AZURE_WEBAPP_NAME: jzdevapi
+  AZURE_FUNCTIONAPP_NAME: jzdevfunc
 
 on:
   push:

@@ -9,6 +9,7 @@ using System.Net;
 using System.IO;  
 using Microsoft.Azure.Cosmos;
 using Microsoft.Extensions.Configuration;
+using Azure.Storage.Blobs;
 
 namespace webapi.Controllers
 {
@@ -36,7 +37,12 @@ namespace webapi.Controllers
         private string _databaseId;
         private string _containerId;
 
+        private BlobContainerClient blobContainerClient;
+        private BlobClient blobClient;
+
         private string _storageConnectionString;
+        private string _storageContainerName;
+
         private readonly ILogger<MyDataController> _logger;
         private readonly IConfiguration _configuration;
         const String folderName = "files";
@@ -50,9 +56,15 @@ namespace webapi.Controllers
             _databaseId = _configuration["Cosmos:DatabaseId"];
             _containerId = _configuration["Cosmos:ContainerId"];
             _storageConnectionString = $"DefaultEndpointsProtocol=https;AccountName={ _configuration["Storage:AccountName"] };AccountKey={ _configuration["Storage:PrimaryKey"] };EndpointSuffix=core.windows.net";
+            _storageContainerName = _configuration["Storage:ContainerName"];
             this.cosmosClient = new CosmosClient(_endpointUrl, _primaryKey);
             this.database = this.cosmosClient.CreateDatabaseIfNotExistsAsync(_databaseId).Result;
             this.container = this.database.CreateContainerIfNotExistsAsync(_containerId, "/id").Result;
+
+            string containerName = "quickstartblobs" + Guid.NewGuid().ToString();
+
+            this.blobContainerClient = new BlobContainerClient(_storageConnectionString, _storageContainerName);
+            blobContainerClient.CreateIfNotExists();
         }
 
         [HttpGet]
@@ -65,12 +77,16 @@ namespace webapi.Controllers
         [HttpPost]
         public IActionResult Post(string name, IFormFile myFile)
         {
-            var rng = new Random();
+            string fileId = Guid.NewGuid().ToString("N");
+
+            this.blobClient = blobContainerClient.GetBlobClient($"{fileId}{Path.GetExtension(myFile.FileName)}");
+            blobClient.Upload(myFile.OpenReadStream());
+
             var myData =  new MyData
             {
-                id = Guid.NewGuid().ToString("N"),
+                id = fileId,
                 displayName = name,
-                filePath = myFile.FileName
+                filePath = blobClient.Uri.AbsoluteUri
             };
 
             ItemResponse<MyData> myDataFile = this.container.CreateItemAsync<MyData>(myData, new PartitionKey(myData.id)).Result;

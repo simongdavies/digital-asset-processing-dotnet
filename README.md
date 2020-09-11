@@ -1,5 +1,7 @@
 # Welcome to the WebAPI-CosmosDB-Storage-Functions accelerator
 
+![Accelerator diagram](docs/img/acceleratordiagram.png)
+
 This accelerator provides you with the following components:
 - A HTTP based WebAPI
 - A CosmosDB database
@@ -16,10 +18,6 @@ A good example use-case is to retrieve audio files, which you want to anaylaze u
 
 This accelerator is not a good fit if you want to orchestrate longer running workflows, or need to analyze a larger set of media files in batch. For those use cases, we recommend you looking at [these accelerators](http://www.microsoft.com).
 
-## Accelerator Introduction Video
-
-![](docs/img/videopreview.png)
-
 ## Accelarator Documentaion
 
 - [Overview](docs)
@@ -30,6 +28,10 @@ This accelerator is not a good fit if you want to orchestrate longer running wor
     - [Function](docs)
 - [Workflows and deployment](docs)
 - [Observability and Monitoring](docs)
+
+## Accelerator Introduction Video
+
+![Overview video preview](docs/img/videopreview.png)
 
 ## Available versions
 

@@ -11,10 +11,11 @@ namespace function
     {
         [FunctionName("CosmosDBTrigger")]
         public static void Run([CosmosDBTrigger(
-            databaseName: "dev",
-            collectionName: "files",
+            databaseName: "media",
+            collectionName: "metadata",
             ConnectionStringSetting = "AzureWebJobsStorage",
-            LeaseCollectionName = "leases")]IReadOnlyList<Document> input, ILogger log)
+            LeaseCollectionName = "leases",
+            CreateLeaseCollectionIfNotExists=true)]IReadOnlyList<Document> input, ILogger log)
         {
             if (input != null && input.Count > 0)
             {

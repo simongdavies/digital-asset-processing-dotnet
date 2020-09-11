@@ -10,8 +10,8 @@ on:
     branches: [ main ]
 
 jobs:
-  build:
-
+  build-webapi:
+    name: 'Build Web Api'
     runs-on: ubuntu-latest
 
     steps:
@@ -23,6 +23,23 @@ jobs:
     - name: Install dependencies
       run: dotnet restore './src/webapi/webapi.csproj'
     - name: Build
-      run: dotnet build --configuration Release --no-restore './src/webapi/webapi.csproj'
+      run: dotnet build --configuration Release --no-restore --output './output/webapi' './src/webapi/webapi.csproj'
     - name: Test
-      run: dotnet test --no-restore --verbosity normal './src/webapi/webapi.csproj'
+      run: dotnet test --no-restore --verbosity normal --output './output/webapi' './src/webapi/webapi.csproj'
+
+  build-function:
+      name: 'Build Function'
+      runs-on: ubuntu-latest
+
+      steps:
+      - uses: actions/checkout@v2
+      - name: Setup .NET Core
+        uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: 3.1.301
+      - name: Install dependencies
+        run: dotnet restore './src/function/function.csproj'
+      - name: Build
+        run: dotnet build --configuration Release --no-restore --output './output/function' './src/function/function.csproj'
+      - name: Test
+        run: dotnet test --no-restore --verbosity normal --output './output/function' './src/function/function.csproj'

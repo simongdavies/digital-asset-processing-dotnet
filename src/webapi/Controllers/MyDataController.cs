@@ -72,11 +72,11 @@ namespace webapi.Controllers
         [HttpPost]
         public async Task<IActionResult> UploadFile(IFormFile myFile)
         {
-            using (var fileContentStream = new MemoryStream())
-            {  
-                await myFile.CopyToAsync(fileContentStream);
-                await System.IO.File.WriteAllBytesAsync(Path.Combine(folderPath, myFile.FileName), fileContentStream.ToArray());
-            }  
+            // using (var fileContentStream = new MemoryStream())
+            // {  
+            //     await myFile.CopyToAsync(fileContentStream);
+            //     await System.IO.File.WriteAllBytesAsync(Path.Combine(folderPath, myFile.FileName), fileContentStream.ToArray());
+            // }  
 
             return Ok($"File is uploaded Successfully");
         }

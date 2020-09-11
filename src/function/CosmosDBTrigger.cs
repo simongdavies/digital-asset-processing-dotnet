@@ -22,6 +22,9 @@ namespace function
                 log.LogInformation("Documents modified " + input.Count);
                 log.LogInformation("First document Id " + input[0].Id);
             }
+
+            // The documents fetched from CosmosDB are availabel in the 'input' list of type 'Document'
+
         }
     }
 }

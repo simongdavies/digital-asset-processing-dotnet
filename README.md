@@ -1,12 +1,17 @@
 # Welcome to the WebAPI-CosmosDB-Storage-Functions accelerator
 
+This accelerator pattern is a good fit for scenarios where you want to build a backend system to receive, process and store any type of data.
+
 ![Accelerator diagram](docs/img/acceleratordiagram.png)
 
-This accelerator provides you with the following components:
-- A HTTP based WebAPI
-- A CosmosDB database
-- A Storage Account
-- A function, which listens to changes in the CosmosDB database
+This accelerator provides you with the following components: HTTP based WebAPI, CosmosDB database, Storage Account and a function, which listens to changes in the CosmosDB database
+
+## Available versions
+
+| Programming language | Framework | Version |
+| -------------------- | --------- | ------- |
+| [C#]()               | dotnet    | 3.1     |
+| [javascript]()       | node.js   | 12.18   |
 
 ## Recommended usage
 
@@ -32,10 +37,3 @@ This accelerator is not a good fit if you want to orchestrate longer running wor
 ## Accelerator Introduction Video
 
 ![Overview video preview](docs/img/videopreview.png)
-
-## Available versions
-
-| Programming language | Framework | Version |
-| -------------------- | --------- | ------- |
-| C#                   | dotnet    | 3.1     |
-| javascript           | node.js   | 12.18   |

@@ -10,8 +10,6 @@ on:
       - main 
     paths-ignore:
       - 'src/arm/**'
-  pull_request:
-    branches: [ main ]
 
 jobs:
   build-webapi:

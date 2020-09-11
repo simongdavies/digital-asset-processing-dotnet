@@ -63,7 +63,7 @@ namespace webapi.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Post(string name, IFormFile myFile)
+        public IActionResult Post(string name, IFormFile myFile)
         {
             var rng = new Random();
             var myData =  new MyData

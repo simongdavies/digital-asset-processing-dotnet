@@ -2,7 +2,7 @@ name: .NET Core
 
 env:
   AZURE_WEBAPP_NAME: jzdemoapi
-  AZURE_FUNCTIONAPP_NAME: 
+  AZURE_FUNCTIONAPP_NAME: jzdemofunc
 
 on:
   push:

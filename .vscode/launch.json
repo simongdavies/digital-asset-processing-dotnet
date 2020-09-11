@@ -3,12 +3,18 @@
    // Use hover for the description of the existing attributes
    // For further information visit https://github.com/OmniSharp/omnisharp-vscode/blob/master/debugger-launchjson.md
    "version": "0.2.0",
+   "compounds": [
+    {
+      "name": "WebAPI/Function",
+      "configurations": ["WebAPI Launch", "Function Launch"]
+    }
+    ],
    "configurations": [
         {
-            "name": ".NET Core Launch",
+            "name": "WebAPI Launch",
             "type": "coreclr",
             "request": "launch",
-            "preLaunchTask": "build",
+            "preLaunchTask": "webapi build",
             // If you have changed target frameworks, make sure to update the program path.
             "program": "${workspaceFolder}/src/webapi/bin/Debug/netcoreapp3.1/webapi.dll",
             "args": [],
@@ -27,6 +33,12 @@
             "sourceFileMap": {
                 "/Views": "${workspaceFolder}/Views"
             }
+        },
+        {
+            "name": "Function Launch",
+            "type": "coreclr",
+            "request": "attach",
+            "processId": "${command:azureFunctions.pickProcess}"
         },
         {
             "name": ".NET Core Attach",

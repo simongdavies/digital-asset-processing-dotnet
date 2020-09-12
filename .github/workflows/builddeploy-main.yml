@@ -74,7 +74,6 @@ jobs:
     - name: printf
       run: |
         pwd
-        ls -a /src/arm
         ls -a 
 
     - name: Porter Publish

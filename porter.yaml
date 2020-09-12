@@ -3,7 +3,7 @@
 # See https://porter.sh/author-bundles for documentation on how to configure your bundle
 # Uncomment out the sections below to take full advantage of what Porter can do!
 
-name: Github Accelerator Demo
+name: github-accelerator
 version: 0.1.0
 description: "A Porter bundle that deploys all artifacts as a single distributed application."
 # TODO: update the registry to your own, e.g. myregistry/porter-hello
@@ -17,13 +17,54 @@ mixins:
   - exec
   - arm
   - az
+  
 
 install:
-  - exec:
-      description: "Install Hello World"
-      command: ./helpers.sh
+  - az:
+      description: "Logging into Azure..."  
       arguments:
-        - install
+        - login
+      flags:
+        service-principal:
+        username: "'{{bundle.credentials.AZURE_DEPLOY_CLIENT_ID}}'"
+        password: "'{{bundle.credentials.AZURE_DEPLOY_CLIENT_SECRET}}'"
+        tenant: "'{{bundle.credentials.AZURE_DEPLOY_TENANT_ID}}'"
+        output: table
+  - az: 
+      description: "Setting the Azure subscription...."
+      arguments: 
+        - "account" 
+        - "set" 
+      flags:
+        subscription: "{{ bundle.credentials.AZURE_DEPLOY_SUBSCRIPTION_ID }}"
+  - az:
+      description: "Creating the Azure resource group if it doesn't exist...."
+      arguments:
+        - group
+        - create
+      flags:
+        name: "'{{bundle.parameters.resourceGroup}}'"
+        location: "'{{bundle.parameters.region}}'"
+        output: table
+
+  - arm:
+      description: "Install the Github Accelerator Azure Resource Manager template."
+#      type: arm
+      template: "arm/azuredeploy.json"
+      name: github-accelerator
+      resourceGroup: "{{ bundle.parameters.resourceGroup }}"
+      parameters:
+        defaultResourceNamePrefix: "{{ bundle.parameters.defaultResourceNamePrefix}}"
+        storageAccountName: "{{bundle.parameters.storageAccountName}}"
+        cosmosAccountName: "{{bundle.parameters.cosmosAccountName}}"
+        cosmosCollectionName: "{{bundle.parameters.cosmosCollectionName}}"
+        cosmosDatabaseName: "{{bundle.parameters.cosmosDatabaseName}}"
+        applicationInsightsName: "{{bundle.parameters.applicationInsightsName}}"
+        functionAppName: "{{bundle.parameters.functionAppName}}"
+        webAppName: "{{bundle.parameters.webAppName}}"
+#      outputs:
+#        - name: "MYSQL_HOST"
+#          key: "MYSQL_HOST"
 
 upgrade:
   - exec:
@@ -41,15 +82,52 @@ uninstall:
 
 # Below is an example of how to define credentials
 # See https://porter.sh/author-bundles/#credentials
-#credentials:
+credentials:
 #  - name: kubeconfig
 #    path: /root/.kube/config
 #  - name: username
 #    env: USERNAME
-
+  - name: AZURE_DEPLOY_CLIENT_ID
+    env: CLIENT_ID
+  - name: AZURE_DEPLOY_CLIENT_SECRET
+    env: CLIENT_SECRET
+  - name: AZURE_DEPLOY_SUBSCRIPTION_ID
+    env: SUBSCRIPTION_ID
+  - name: AZURE_DEPLOY_TENANT_ID
+    env: TENANT_ID
 # Below is an example of how to define parameters
 # See https://porter.sh/author-bundles/#parameters
-#parameters:
+parameters:
 #  - name: mysql_user
 #    type: string
 #    default: wordpress
+  - name: region
+    type: string
+    default: westus2
+  - name: resourceGroup
+    type: string
+    default: "zdemo"
+  - name: defaultResourceNamePrefix
+    type: string
+    default: "zdemo"
+  - name: storageAccountName
+    type: string
+    default: "zdemosta"
+  - name: cosmosAccountName
+    type: string
+    default: "zdemocosmos"
+  - name: cosmosCollectionName
+    type: string
+    default: "metadata"
+  - name: cosmosDatabaseName
+    type: string
+    default: "media"
+  - name: applicationInsightsName
+    type: string
+    default: "zdemoinsights"
+  - name: functionAppName
+    type: string
+    default: "zdemofunc"
+  - name: webAppName
+    type: string
+    default: "zdemoapi"

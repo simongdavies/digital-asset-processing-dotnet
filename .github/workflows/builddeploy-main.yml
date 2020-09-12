@@ -64,10 +64,15 @@ jobs:
       run: |
         sudo apt-get install zip -y
         zip 
+
     - name: Get application artifacts
       uses: actions/download-artifact@v2
       with:
         path: './output/'
+    - name: Zip the function and webapi for source deployment
+      run: | 
+        pushd ./output/functions/; zip -r ../../functions.zip .; popd 
+        pushd ./output/webapi/; zip -r ../../webapi.zip .; popd   
     - name: Setup Porter
       uses: deislabs/porter-gh-action@v0.1.1
     - uses: azure/docker-login@v1

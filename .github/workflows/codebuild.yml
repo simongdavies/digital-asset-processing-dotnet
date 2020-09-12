@@ -67,7 +67,8 @@ jobs:
 
     - name: Get application artifacts
       uses: actions/download-artifact@v2
-
+      with:
+        path: './output/'
     - name: Setup Porter
       uses: deislabs/porter-gh-action@v0.1.1
     - uses: azure/docker-login@v1

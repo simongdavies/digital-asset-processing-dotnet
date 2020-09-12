@@ -76,6 +76,8 @@ jobs:
       run: |
         pwd
         ls -a 
+        ls output
+        ls src
 
     - name: Porter Publish
       run: porter publish  

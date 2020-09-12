@@ -50,7 +50,7 @@ install:
   - arm:
       description: "Install the Github Accelerator Azure Resource Manager template."
 #      type: arm
-      template: "arm/azuredeploy.json"
+      template: "src/arm/azuredeploy.json"
       name: github-accelerator
       resourceGroup: "{{ bundle.parameters.resourceGroup }}"
       parameters:

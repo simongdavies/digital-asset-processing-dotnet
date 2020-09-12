@@ -82,7 +82,7 @@ install:
         parameters: '"cosmosCollectionName={{bundle.parameters.cosmosCollectionName}}"'
         parameters: '"cosmosDatabaseName={{bundle.parameters.applicationInsightsName}}"'
         parameters: '"functionAppName={{bundle.parameters.functionAppName}}"'
-        paramters: '"webAppName={{bundle.parameters.webAppName}}"'
+        parameters: '"webAppName={{bundle.parameters.webAppName}}"'
 
 upgrade:
   - exec:

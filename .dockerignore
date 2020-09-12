@@ -12,5 +12,6 @@
 !porter.yaml
 !Dockerfile
 !/output/**
-!/arm/**
+!/src/arm/**
+
 

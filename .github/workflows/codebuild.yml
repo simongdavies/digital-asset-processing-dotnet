@@ -64,6 +64,10 @@ jobs:
     needs: [ build-function, build-webapi ]
     steps:
     - uses: actions/checkout@v1
+
+    - name: Get application artifacts
+      uses: actions/download-artifact@v2
+
     - name: Setup Porter
       uses: deislabs/porter-gh-action@v0.1.1
     - uses: azure/docker-login@v1
@@ -75,6 +79,7 @@ jobs:
       run: |
         pwd
         ls -a /src/arm
+        ls -a 
 
     - name: Porter Publish
       run: porter publish  

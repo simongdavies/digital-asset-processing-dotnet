@@ -67,6 +67,8 @@ jobs:
       with:
         username: ${{ secrets.DOCKER_USERNAME }}
         password: ${{ secrets.DOCKER_PASSWORD }}
+    - name: where are we
+      run: tree    
     - name: Porter Publish
       run: porter publish  
 

@@ -1,5 +1,3 @@
-appsettings.Development.json
-
 [webapi]
 # Build results
 src/webapi/[Dd]ebug/
@@ -15,6 +13,7 @@ src/webapi/[Oo]bj/
 src/webapi/msbuild.log
 src/webapi/msbuild.err
 src/webapi/msbuild.wrn
+src/webapi/appsettings.Development.json
 
 [function]
 src/function/[Dd]ebug/

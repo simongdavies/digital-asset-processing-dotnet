@@ -2,7 +2,7 @@
     "version": "2.0.0",
     "tasks": [
         {
-            "label": "build",
+            "label": "webapi build",
             "command": "dotnet",
             "type": "process",
             "args": [
@@ -13,20 +13,8 @@
             ],
             "problemMatcher": "$msCompile",
         },
-        {   "label": "func",
-            "command": "func",
-            "type": "process",
-            "isBackground": true,
-            "options": {},
-            "args": [
-                "start",
-                "--script-root",
-                "${workspaceFolder}/src/function/"
-            ]
-
-        },
         {
-            "label": "publish",
+            "label": "webapi publish",
             "command": "dotnet",
             "type": "process",
             "args": [
@@ -38,7 +26,7 @@
             "problemMatcher": "$msCompile"
         },
         {
-            "label": "watch",
+            "label": "webapi watch",
             "command": "dotnet",
             "type": "process",
             "args": [
@@ -49,6 +37,86 @@
                 "/consoleloggerparameters:NoSummary"
             ],
             "problemMatcher": "$msCompile"
+        },
+        {
+            "label": "mads func",
+            "command": "func",
+            "type": "process",
+            "isBackground": true,
+            "options": {},
+            "args": [
+                "start",
+                "--script-root",
+                "${workspaceFolder}/src/function/"
+            ]
+        },
+        {
+            "label": "func clean",
+            "command": "dotnet",
+            "args": [
+                "clean",
+                "/property:GenerateFullPaths=true",
+                "/consoleloggerparameters:NoSummary",
+                "${workspaceFolder}/src/function/function.csproj"
+            ],
+            "type": "process",
+            "problemMatcher": "$msCompile"
+        },
+        {
+            "label": "func build",
+            "command": "dotnet",
+            "args": [
+                "build",
+                "/property:GenerateFullPaths=true",
+                "/consoleloggerparameters:NoSummary",
+                "${workspaceFolder}/src/function/function.csproj"
+            ],
+            "type": "process",
+            "dependsOn": "func clean",
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+            "problemMatcher": "$msCompile"
+        },
+        {
+            "label": "func clean release",
+            "command": "dotnet",
+            "args": [
+                "clean",
+                "--configuration",
+                "Release",
+                "/property:GenerateFullPaths=true",
+                "/consoleloggerparameters:NoSummary",
+                "${workspaceFolder}/src/function/function.csproj"
+            ],
+            "type": "process",
+            "problemMatcher": "$msCompile"
+        },
+        {
+            "label": "func publish",
+            "command": "dotnet",
+            "args": [
+                "publish",
+                "--configuration",
+                "Release",
+                "/property:GenerateFullPaths=true",
+                "/consoleloggerparameters:NoSummary",
+                "${workspaceFolder}/src/function/function.csproj"
+            ],
+            "type": "process",
+            "dependsOn": "func clean release",
+            "problemMatcher": "$msCompile"
+        },
+        {
+            "type": "func",
+            "dependsOn": "func build",
+            "options": {
+                "cwd": "${workspaceFolder}/src/function/bin/Debug/netcoreapp3.1"
+            },
+            "command": "host start",
+            "isBackground": true,
+            "problemMatcher": "$func-watch"
         }
     ]
 }

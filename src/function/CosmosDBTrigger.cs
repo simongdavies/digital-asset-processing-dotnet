@@ -13,7 +13,7 @@ namespace function
         public static void Run([CosmosDBTrigger(
             databaseName: "media",
             collectionName: "metadata",
-            ConnectionStringSetting = "AzureWebJobsStorage",
+            ConnectionStringSetting = "CosmosDBConnection",
             LeaseCollectionName = "leases",
             CreateLeaseCollectionIfNotExists=true)]IReadOnlyList<Document> input, ILogger log)
         {
@@ -22,6 +22,9 @@ namespace function
                 log.LogInformation("Documents modified " + input.Count);
                 log.LogInformation("First document Id " + input[0].Id);
             }
+
+            // The documents fetched from CosmosDB are availabel in the 'input' list of type 'Document'
+
         }
     }
 }

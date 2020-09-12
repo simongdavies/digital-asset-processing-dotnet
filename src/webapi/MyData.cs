@@ -10,6 +10,7 @@ namespace webapi
 
         public string filePath { get; set; }
 
-        public DateTime recordedAt { get; set; }
+        public string locationRecorded { get; set; }
+
     }
 }

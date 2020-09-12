@@ -61,7 +61,7 @@ jobs:
   porter-build:
 
     runs-on: ubuntu-latest
-
+    needs: [ build-function, build-webapi ]
     steps:
     - uses: actions/checkout@v1
     - name: Setup Porter

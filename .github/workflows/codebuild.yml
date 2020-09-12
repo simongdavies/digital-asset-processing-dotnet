@@ -77,7 +77,6 @@ jobs:
         apt-get install tree
         tree -Ld 4
         find ~ -type f -name "*.json"
-    - name: Capturing outputs
     - name: Porter Publish
       run: porter publish  
 

@@ -4,7 +4,7 @@
 # Uncomment out the sections below to take full advantage of what Porter can do!
 
 name: github-accelerator
-version: 0.2.0
+version: 0.3.0
 description: "A Porter bundle that deploys all artifacts as a single distributed application."
 # TODO: update the registry to your own, e.g. myregistry/porter-hello
 tag: squillace/github-accelerator 

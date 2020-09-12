@@ -81,7 +81,7 @@ jobs:
         pwd
         ls -a 
         ls output
-        ls src
+        ls src/arm
 
     - name: Porter Publish
       run: porter publish  

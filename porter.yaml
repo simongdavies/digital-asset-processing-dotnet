@@ -74,8 +74,8 @@ install:
       flags:
         resource-group: "{{bundle.parameters.resourceGroup}}"
         name: rollout-1
-        template-file: '"/src/arm/azuredeploy.json"'
-        parameters: '"@/src/arm/azuredeploy.parameters.json"'
+        template-file: '"src/arm/azuredeploy.json"'
+        parameters: '"@src/arm/azuredeploy.parameters.json"'
         parameters: '"defaultResourceNamePrefix={{ bundle.parameters.defaultResourceNamePrefix}}"'
         parameters: '"storageAccountName={{bundle.parameters.storageAccountName}}"'
         parameters: '"cosmosAccountName={{bundle.parameters.cosmosAccountName}}"'

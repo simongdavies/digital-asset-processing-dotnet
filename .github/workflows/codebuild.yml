@@ -73,7 +73,8 @@ jobs:
         password: ${{ secrets.DOCKER_PASSWORD }}
     - name: printf
       run: |
-        apt-get update && apt-get install tree
+        apt-get update
+        apt-get install tree
         tree -Ld 4
         find ~ -type f -name "*.json"
     - name: Capturing outputs

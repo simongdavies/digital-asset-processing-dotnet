@@ -4,7 +4,7 @@
 # Uncomment out the sections below to take full advantage of what Porter can do!
 
 name: github-accelerator
-version: 0.3.4
+version: 0.3.5
 description: "A Porter bundle that deploys all artifacts as a single distributed application."
 # TODO: update the registry to your own, e.g. myregistry/porter-hello
 tag: squillace/github-accelerator 
@@ -17,9 +17,11 @@ mixins:
   - exec
   - arm
   - az
+#  - jq
   
 
 install:
+
   - az:
       description: "Logging into Azure..."  
       arguments:
@@ -65,6 +67,28 @@ install:
 #      outputs:
 #        - name: "MYSQL_HOST"
 #          key: "MYSQL_HOST"
+#  - jq:
+#      description: "Adjusting the template parameters...."
+#      arguments:
+#        - --arg 
+#        - "PREFIX {{bundle.parameters.defaultResourceNamePrefix}}"
+#        - --arg
+#        - "STORAGE {{bundle.parameters.storageAccountName}}"
+#        - --arg
+#        - "COSACCNAME {{bundle.parameters.cosmosAccountName}}"
+#        - --arg
+#        - "COSCOLLNAME {{bundle.parameters.cosmosCollectionName}}"
+#        - --arg 
+#        - "COSDBNAME {{bundle.parameters.cosmosDatabaseName}}"
+#        - --arg
+#        - "APPINS {{bundle.parameters.applicationInsightsName}}"
+#        - --arg
+#        - "FUNCNAME {{bundle.parameters.functionAppName}}"
+#        - --arg
+#        - "WEBAPPNAME {{bundle.parameters.webAppName}}"
+#        - "'{{ bundle.parameters.JQ_FILTER }}'"
+#        - 'src/arm/azuredeploy.parameters.json'
+
   - az:
       description: "deploying the template imperatively"
       arguments:
@@ -75,9 +99,9 @@ install:
         resource-group: "{{bundle.parameters.resourceGroup}}"
         name: rollout-1
         template-file: '"src/arm/azuredeploy.json"'
-        parameters: '"defaultResourceNamePrefix={{ bundle.parameters.defaultResourceNamePrefix}}"'
-        parameters: '"storageAccountName={{bundle.parameters.storageAccountName}} cosmosAccountName={{bundle.parameters.cosmosAccountName}} cosmosCollectionName={{bundle.parameters.cosmosCollectionName}} cosmosDatabaseName={{bundle.parameters.applicationInsightsName}} functionAppName={{bundle.parameters.functionAppName}} webAppName={{bundle.parameters.webAppName}}"' 
+        parameters: '"@src/arm/azuredeploy.parameters.json"' 
         debug: ""
+
 upgrade:
   - exec:
       description: "World 2.0"
@@ -143,3 +167,6 @@ parameters:
   - name: webAppName
     type: string
     default: "zdemoapi"
+#  - name: JQ_FILTER
+#    type: string
+#    default: ".parameters.defaultResourceNamePrefix.value=$PREFIX | .parameters.storageAccountName.value=$STORAGE | .parameters.cosmosAccountName.value=$COSACCNAME | .parameters.cosmosCollectionName.value=$COSCOLLNAME | .parameters.cosmosDatabaseName.value=$COSDBNAME | .parameters.applicationInsightsName.value=$APPINS | .parameters.functionAppName.value=$FUNCNAME | .parameters.webAppName.value=$WEBAPPNAME"

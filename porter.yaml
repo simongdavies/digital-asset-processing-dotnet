@@ -76,7 +76,7 @@ install:
         name: rollout-1
         template-file: '"src/arm/azuredeploy.json"'
         parameters: '"defaultResourceNamePrefix={{ bundle.parameters.defaultResourceNamePrefix}} storageAccountName={{bundle.parameters.storageAccountName}} cosmosAccountName={{bundle.parameters.cosmosAccountName}} cosmosCollectionName={{bundle.parameters.cosmosCollectionName}} cosmosDatabaseName={{bundle.parameters.applicationInsightsName}} functionAppName={{bundle.parameters.functionAppName}} webAppName={{bundle.parameters.webAppName}}"'
-
+        debug: ""
 upgrade:
   - exec:
       description: "World 2.0"

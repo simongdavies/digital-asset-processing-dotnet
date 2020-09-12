@@ -47,24 +47,42 @@ install:
         location: "'{{bundle.parameters.region}}'"
         output: table
 
-  - arm:
-      description: "Install the Github Accelerator Azure Resource Manager template."
+#  - arm:
+#      description: "Install the Github Accelerator Azure Resource Manager template."
 #      type: arm
-      template: "src/arm/azuredeploy.json"
-      name: github-accelerator
-      resourceGroup: "{{ bundle.parameters.resourceGroup }}"
-      parameters:
-        defaultResourceNamePrefix: "{{ bundle.parameters.defaultResourceNamePrefix}}"
-        storageAccountName: "{{bundle.parameters.storageAccountName}}"
-        cosmosAccountName: "{{bundle.parameters.cosmosAccountName}}"
-        cosmosCollectionName: "{{bundle.parameters.cosmosCollectionName}}"
-        cosmosDatabaseName: "{{bundle.parameters.cosmosDatabaseName}}"
-        applicationInsightsName: "{{bundle.parameters.applicationInsightsName}}"
-        functionAppName: "{{bundle.parameters.functionAppName}}"
-        webAppName: "{{bundle.parameters.webAppName}}"
+#      template: "src/arm/azuredeploy.json"
+#      name: github-accelerator
+#      resourceGroup: "{{ bundle.parameters.resourceGroup }}"
+#      parameters:
+#        defaultResourceNamePrefix: "{{ bundle.parameters.defaultResourceNamePrefix}}"
+#        storageAccountName: "{{bundle.parameters.storageAccountName}}"
+#        cosmosAccountName: "{{bundle.parameters.cosmosAccountName}}"
+#        cosmosCollectionName: "{{bundle.parameters.cosmosCollectionName}}"
+#        cosmosDatabaseName: "{{bundle.parameters.cosmosDatabaseName}}"
+#        applicationInsightsName: "{{bundle.parameters.applicationInsightsName}}"
+#        functionAppName: "{{bundle.parameters.functionAppName}}"
+#        webAppName: "{{bundle.parameters.webAppName}}"
 #      outputs:
 #        - name: "MYSQL_HOST"
 #          key: "MYSQL_HOST"
+  - az:
+      description: "deploying the template imperatively"
+      arguments:
+        - deployment
+        - group
+        - create
+      flags:
+        resource-group: "{{bundle.parameters.resourceGroup}}"
+        name: rollout-1
+        template-file: '"/src/arm/azuredeploy.json"'
+        parameters: '"@/src/arm/azuredeploy.parameters.json"'
+        parameters: '"defaultResourceNamePrefix={{ bundle.parameters.defaultResourceNamePrefix}}"'
+        parameters: '"storageAccountName={{bundle.parameters.storageAccountName}}"'
+        parameters: '"cosmosAccountName={{bundle.parameters.cosmosAccountName}}"'
+        parameters: '"cosmosCollectionName={{bundle.parameters.cosmosCollectionName}}"'
+        parameters: '"cosmosDatabaseName={{bundle.parameters.applicationInsightsName}}"'
+        parameters: '"functionAppName={{bundle.parameters.functionAppName}}"'
+        paramters: '"webAppName={{bundle.parameters.webAppName}}"'
 
 upgrade:
   - exec:

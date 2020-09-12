@@ -69,10 +69,9 @@ jobs:
         password: ${{ secrets.DOCKER_PASSWORD }}
     - name: printf
       run: |
-        sudo apt-get update
-        sudo apt-get install tree
-        tree -Ld 4
-        find ~ -type f -name "*.json"
+        pwd
+        ls -a /src/arm
+
     - name: Porter Publish
       run: porter publish  
 

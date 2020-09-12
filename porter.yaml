@@ -4,7 +4,7 @@
 # Uncomment out the sections below to take full advantage of what Porter can do!
 
 name: github-accelerator
-version: 0.3.1
+version: 0.3.2
 description: "A Porter bundle that deploys all artifacts as a single distributed application."
 # TODO: update the registry to your own, e.g. myregistry/porter-hello
 tag: squillace/github-accelerator 
@@ -75,14 +75,7 @@ install:
         resource-group: "{{bundle.parameters.resourceGroup}}"
         name: rollout-1
         template-file: '"src/arm/azuredeploy.json"'
-        parameters: '"@src/arm/azuredeploy.parameters.json"'
-        parameters: '"defaultResourceNamePrefix={{ bundle.parameters.defaultResourceNamePrefix}}"'
-        parameters: '"storageAccountName={{bundle.parameters.storageAccountName}}"'
-        parameters: '"cosmosAccountName={{bundle.parameters.cosmosAccountName}}"'
-        parameters: '"cosmosCollectionName={{bundle.parameters.cosmosCollectionName}}"'
-        parameters: '"cosmosDatabaseName={{bundle.parameters.applicationInsightsName}}"'
-        parameters: '"functionAppName={{bundle.parameters.functionAppName}}"'
-        parameters: '"webAppName={{bundle.parameters.webAppName}}"'
+        parameters: '"@src/arm/azuredeploy.parameters.json defaultResourceNamePrefix={{ bundle.parameters.defaultResourceNamePrefix}} storageAccountName={{bundle.parameters.storageAccountName}} cosmosAccountName={{bundle.parameters.cosmosAccountName}} cosmosCollectionName={{bundle.parameters.cosmosCollectionName}} cosmosDatabaseName={{bundle.parameters.applicationInsightsName}} functionAppName={{bundle.parameters.functionAppName}} webAppName={{bundle.parameters.webAppName}}"'
 
 upgrade:
   - exec:

@@ -64,7 +64,10 @@ jobs:
     needs: [ build-function, build-webapi ]
     steps:
     - uses: actions/checkout@v1
-
+    - name: Zip for deployment
+      run: |
+        sudo apt-get install zip -y
+        zip 
     - name: Get application artifacts
       uses: actions/download-artifact@v2
       with:

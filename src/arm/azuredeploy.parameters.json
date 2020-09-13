@@ -3,13 +3,13 @@
     "contentVersion": "1.0.0.0",
     "parameters": {
         "defaultResourceNamePrefix": {
-            "value": "zdemo"
+            "value": "jzdev"
         },
         "storageAccountName": {
-            "value": "zdemosta"
+            "value": "jzdevsta"
         },
         "cosmosAccountName": {
-            "value": "zdemocosmos"
+            "value": "jzdevcosmos"
         },
         "cosmosCollectionName": {
             "value": "metadata"
@@ -18,13 +18,13 @@
             "value": "media"
         },
         "applicationInsightsName": {
-            "value": "zdemoinsights"
+            "value": "jzdevinsights"
         },
         "functionAppName": {
-            "value": "zdemofunc"
+            "value": "jzdevfunc"
         },
         "webAppName": {
-            "value": "zdemoapi"
+            "value": "jzdevapi"
         }
     }
 }

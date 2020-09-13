@@ -20,7 +20,7 @@ namespace function
             if (input != null && input.Count > 0)
             {
                 log.LogInformation("Documents modified " + input.Count);
-                log.LogInformation("First document Id " + input[0].Id);
+                log.LogInformation("First document Id is" + input[0].Id);
             }
 
             // The documents fetched from CosmosDB are availabel in the 'input' list of type 'Document'

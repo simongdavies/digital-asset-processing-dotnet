@@ -9,8 +9,8 @@ on:
     branches:
       - main 
     paths:
-      - './src/function/**'
-      - './src/webapi/**'
+      - '/src/function/**'
+      - '/src/webapi/**'
 
 jobs:
 

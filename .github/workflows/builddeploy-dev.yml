@@ -9,8 +9,8 @@ on:
     branches:
       - dev 
     paths:
-      - './src/function/**'
-      - './src/webapi/**'
+      - '/src/function/**'
+      - '/src/webapi/**'
 
 jobs:
   build-webapi:

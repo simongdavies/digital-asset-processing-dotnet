@@ -3,13 +3,13 @@
     "contentVersion": "1.0.0.0",
     "parameters": {
         "defaultResourceNamePrefix": {
-            "value": "ralph"
+            "value": "zdemo"
         },
         "storageAccountName": {
-            "value": "phsfljk"
+            "value": "zdemosta"
         },
         "cosmosAccountName": {
-            "value": "ralphcosmos"
+            "value": "zdemocosmos"
         },
         "cosmosCollectionName": {
             "value": "metadata"
@@ -18,13 +18,13 @@
             "value": "media"
         },
         "applicationInsightsName": {
-            "value": "ralphinsights"
+            "value": "zdemoinsights"
         },
         "functionAppName": {
-            "value": "ralphfunc"
+            "value": "zdemofunc"
         },
         "webAppName": {
-            "value": "ralphapi"
+            "value": "zdemoapi"
         }
     }
 }

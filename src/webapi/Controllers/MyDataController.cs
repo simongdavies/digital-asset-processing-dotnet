@@ -91,7 +91,7 @@ namespace webapi.Controllers
 
             ItemResponse<MyData> myDataFile = this.container.CreateItemAsync<MyData>(myData, new PartitionKey(myData.id)).Result;
 
-            return Ok($"Record with id: {myData.id} created.");
+            return Ok($"Record with id: {myData.id} created in the database.");
         }
     }
 }

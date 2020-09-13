@@ -4,9 +4,8 @@
 # Uncomment out the sections below to take full advantage of what Porter can do!
 
 name: github-accelerator
-version: 0.4.0
+version: 0.4.1
 description: "A Porter bundle that deploys all artifacts as a single distributed application."
-# TODO: update the registry to your own, e.g. myregistry/porter-hello
 tag: squillace/github-accelerator 
 
 # If you want to customize the Dockerfile in use, uncomment the line below and update the referenced file. 
@@ -19,7 +18,6 @@ mixins:
   - az
   - jq
   
-
 install:
 
   - az:
@@ -72,11 +70,7 @@ install:
       description: "Using bash file to modify parameters."
       arguments:
         - ./modify-params.sh
-  - exec:
-      command: bash
-      description: "catting the results..."
-      flags:
-        c: '"cat src/arm/modified-parameters.json"'
+
 #  - jq:
 #      description: "Adjusting the template parameters...."
 #      arguments:

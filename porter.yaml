@@ -4,20 +4,20 @@
 # Uncomment out the sections below to take full advantage of what Porter can do!
 
 name: github-accelerator
-version: 0.3.5
+version: 0.4.0
 description: "A Porter bundle that deploys all artifacts as a single distributed application."
 # TODO: update the registry to your own, e.g. myregistry/porter-hello
 tag: squillace/github-accelerator 
 
 # If you want to customize the Dockerfile in use, uncomment the line below and update the referenced file. 
 # See https://porter.sh/custom-dockerfile/
-#dockerfile: Dockerfile.tmpl
+dockerfile: Dockerfile.tmpl
 
 mixins:
   - exec
   - arm
   - az
-#  - jq
+  - jq
   
 
 install:
@@ -67,6 +67,16 @@ install:
 #      outputs:
 #        - name: "MYSQL_HOST"
 #          key: "MYSQL_HOST"
+  - exec:
+      command: bash
+      description: "Using bash file to modify parameters."
+      arguments:
+        - ./modify-params.sh
+  - exec:
+      command: bash
+      description: "catting the results..."
+      flags:
+        c: '"cat src/arm/modified-parameters.json"'
 #  - jq:
 #      description: "Adjusting the template parameters...."
 #      arguments:
@@ -88,6 +98,14 @@ install:
 #        - "WEBAPPNAME {{bundle.parameters.webAppName}}"
 #        - "'{{ bundle.parameters.JQ_FILTER }}'"
 #        - 'src/arm/azuredeploy.parameters.json'
+#      output:
+#        - name: modified-params
+#          path: /src/arm/modified-params.json 
+#  - exec:
+#      command: bash
+#      description: "testing for output"
+#      flags:
+#        c: '"ls {{bundle.outputs.modified-params}}"'
 
   - az:
       description: "deploying the template imperatively"
@@ -97,10 +115,32 @@ install:
         - create
       flags:
         resource-group: "{{bundle.parameters.resourceGroup}}"
-        name: rollout-1
+        name: rollout1
         template-file: '"src/arm/azuredeploy.json"'
-        parameters: '"@src/arm/azuredeploy.parameters.json"' 
-        debug: ""
+        parameters: '"@src/arm/modified-parameters.json"' 
+
+  - az:
+      description: "Deploying the WebApi application..."
+      arguments:
+        - webapp
+        - deployment
+        - source
+        - config-zip
+      flags:
+        name: '"{{bundle.parameters.webAppName}}"'
+        resource-group: '"{{bundle.parameters.resourceGroup}}"'
+        src: webapi.zip
+  - az:
+      description: "Deploying the Azure Function application..."
+      arguments:
+        - functionapp
+        - deployment
+        - source
+        - config-zip
+      flags:
+        name: '"{{bundle.parameters.functionAppName}}"'
+        resource-group: '"{{bundle.parameters.resourceGroup}}"'
+        src: function.zip
 
 upgrade:
   - exec:
@@ -134,9 +174,6 @@ credentials:
 # Below is an example of how to define parameters
 # See https://porter.sh/author-bundles/#parameters
 parameters:
-#  - name: mysql_user
-#    type: string
-#    default: wordpress
   - name: region
     type: string
     default: westus2
@@ -167,6 +204,6 @@ parameters:
   - name: webAppName
     type: string
     default: "zdemoapi"
-#  - name: JQ_FILTER
-#    type: string
-#    default: ".parameters.defaultResourceNamePrefix.value=$PREFIX | .parameters.storageAccountName.value=$STORAGE | .parameters.cosmosAccountName.value=$COSACCNAME | .parameters.cosmosCollectionName.value=$COSCOLLNAME | .parameters.cosmosDatabaseName.value=$COSDBNAME | .parameters.applicationInsightsName.value=$APPINS | .parameters.functionAppName.value=$FUNCNAME | .parameters.webAppName.value=$WEBAPPNAME"
+  - name: JQ_FILTER
+    type: string
+    default: ".parameters.defaultResourceNamePrefix.value=$PREFIX | .parameters.storageAccountName.value=$STORAGE | .parameters.cosmosAccountName.value=$COSACCNAME | .parameters.cosmosCollectionName.value=$COSCOLLNAME | .parameters.cosmosDatabaseName.value=$COSDBNAME | .parameters.applicationInsightsName.value=$APPINS | .parameters.functionAppName.value=$FUNCNAME | .parameters.webAppName.value=$WEBAPPNAME"

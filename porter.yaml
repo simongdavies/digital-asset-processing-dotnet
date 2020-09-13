@@ -67,6 +67,16 @@ install:
 #      outputs:
 #        - name: "MYSQL_HOST"
 #          key: "MYSQL_HOST"
+  - exec:
+      command: bash
+      description: "Using bash file to modify parameters."
+      arguments:
+        - ./modify-params.sh
+  - exec:
+      command: bash
+      description: "catting the results..."
+      flags:
+        c: '"cat src/arm/modified-parameters.json"'
 #  - jq:
 #      description: "Adjusting the template parameters...."
 #      arguments:
@@ -88,6 +98,14 @@ install:
 #        - "WEBAPPNAME {{bundle.parameters.webAppName}}"
 #        - "'{{ bundle.parameters.JQ_FILTER }}'"
 #        - 'src/arm/azuredeploy.parameters.json'
+#      output:
+#        - name: modified-params
+#          path: /src/arm/modified-params.json 
+#  - exec:
+#      command: bash
+#      description: "testing for output"
+#      flags:
+#        c: '"ls {{bundle.outputs.modified-params}}"'
 
   - az:
       description: "deploying the template imperatively"
@@ -99,8 +117,30 @@ install:
         resource-group: "{{bundle.parameters.resourceGroup}}"
         name: rollout1
         template-file: '"src/arm/azuredeploy.json"'
-        parameters: '"@src/arm/azuredeploy.parameters.json"' 
-#        debug: ""
+        parameters: '"@src/arm/modified-parameters.json"' 
+
+  - az:
+      description: "Deploying the WebApi application..."
+      arguments:
+        - webapp
+        - deployment
+        - source
+        - config-zip
+      flags:
+        name: '"{{bundle.parameters.webAppName}}"'
+        resource-group: '"{{bundle.parameters.resourceGroup}}"'
+        src: webapi.zip
+  - az:
+      description: "Deploying the Azure Function application..."
+      arguments:
+        - functionapp
+        - deployment
+        - source
+        - config-zip
+      flags:
+        name: '"{{bundle.parameters.functionAppName}}"'
+        resource-group: '"{{bundle.parameters.resourceGroup}}"'
+        src: function.zip
 
 upgrade:
   - exec:

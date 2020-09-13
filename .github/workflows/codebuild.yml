@@ -79,6 +79,8 @@ jobs:
         pushd ./output/webapi/; zip -r ../../webapi.zip .; popd   
     - name: Setup Porter
       uses: deislabs/porter-gh-action@v0.1.1
+    - name: Pull in jq mixin
+      run: porter mixins install jq --url https://github.com/squillace/porter-jq/releases/download --version v0.1.0
     - uses: azure/docker-login@v1
       name: Docker Login
       with:

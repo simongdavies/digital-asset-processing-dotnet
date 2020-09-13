@@ -10,7 +10,5 @@ namespace webapi
 
         public string filePath { get; set; }
 
-        public string locationRecorded { get; set; }
-
     }
 }

@@ -9,8 +9,9 @@ on:
     branches:
       - dev 
     paths:
-      - './src/function/**'
-      - './src/webapi/**'
+      - '/src/function/**'
+      - '/src/webapi/**'
+  workflow_dispatch:
 
 jobs:
   build-webapi:

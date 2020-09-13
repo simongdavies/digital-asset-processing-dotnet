@@ -4,20 +4,20 @@
 # Uncomment out the sections below to take full advantage of what Porter can do!
 
 name: github-accelerator
-version: 0.3.5
+version: 0.3.7
 description: "A Porter bundle that deploys all artifacts as a single distributed application."
 # TODO: update the registry to your own, e.g. myregistry/porter-hello
 tag: squillace/github-accelerator 
 
 # If you want to customize the Dockerfile in use, uncomment the line below and update the referenced file. 
 # See https://porter.sh/custom-dockerfile/
-#dockerfile: Dockerfile.tmpl
+dockerfile: Dockerfile.tmpl
 
 mixins:
   - exec
   - arm
   - az
-#  - jq
+  - jq
   
 
 install:
@@ -97,10 +97,10 @@ install:
         - create
       flags:
         resource-group: "{{bundle.parameters.resourceGroup}}"
-        name: rollout-1
+        name: rollout1
         template-file: '"src/arm/azuredeploy.json"'
         parameters: '"@src/arm/azuredeploy.parameters.json"' 
-        debug: ""
+#        debug: ""
 
 upgrade:
   - exec:
@@ -134,9 +134,6 @@ credentials:
 # Below is an example of how to define parameters
 # See https://porter.sh/author-bundles/#parameters
 parameters:
-#  - name: mysql_user
-#    type: string
-#    default: wordpress
   - name: region
     type: string
     default: westus2
@@ -167,6 +164,6 @@ parameters:
   - name: webAppName
     type: string
     default: "zdemoapi"
-#  - name: JQ_FILTER
-#    type: string
-#    default: ".parameters.defaultResourceNamePrefix.value=$PREFIX | .parameters.storageAccountName.value=$STORAGE | .parameters.cosmosAccountName.value=$COSACCNAME | .parameters.cosmosCollectionName.value=$COSCOLLNAME | .parameters.cosmosDatabaseName.value=$COSDBNAME | .parameters.applicationInsightsName.value=$APPINS | .parameters.functionAppName.value=$FUNCNAME | .parameters.webAppName.value=$WEBAPPNAME"
+  - name: JQ_FILTER
+    type: string
+    default: ".parameters.defaultResourceNamePrefix.value=$PREFIX | .parameters.storageAccountName.value=$STORAGE | .parameters.cosmosAccountName.value=$COSACCNAME | .parameters.cosmosCollectionName.value=$COSCOLLNAME | .parameters.cosmosDatabaseName.value=$COSDBNAME | .parameters.applicationInsightsName.value=$APPINS | .parameters.functionAppName.value=$FUNCNAME | .parameters.webAppName.value=$WEBAPPNAME"

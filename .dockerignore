@@ -13,5 +13,7 @@
 !Dockerfile
 !/output/**
 !/src/arm/**
+!function.zip
+!webapi.zip
 
 

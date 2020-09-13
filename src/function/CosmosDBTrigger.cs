@@ -24,6 +24,7 @@ namespace function
             }
 
             // The documents fetched from CosmosDB are availabel in the 'input' list of type 'Document'
+            log.LogInformation("Cognitive Services call");
 
         }
     }

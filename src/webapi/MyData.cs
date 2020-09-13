@@ -10,5 +10,7 @@ namespace webapi
 
         public string filePath { get; set; }
 
+        public string recordedAt { get; set; }
+
     }
 }

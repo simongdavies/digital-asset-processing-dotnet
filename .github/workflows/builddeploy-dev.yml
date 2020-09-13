@@ -8,8 +8,9 @@ on:
   push:
     branches:
       - dev 
-    paths-ignore:
-      - 'src/arm/**'
+    paths:
+      - './src/function/**'
+      - './src/webapi/**'
 
 jobs:
   build-webapi:

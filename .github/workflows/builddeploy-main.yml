@@ -7,9 +7,10 @@ env:
 on:
   push:
     branches:
-      - main
-    paths-ignore:
-      - 'src/arm/**'
+      - dev 
+    paths:
+      - './src/function/**'
+      - './src/webapi/**'
 
 jobs:
 

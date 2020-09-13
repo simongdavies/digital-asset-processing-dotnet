@@ -1,3 +1,5 @@
+![Build and deploy main](https://github.com/MikkelHegn/AcceleratorDemoResult/workflows/Build%20and%20deploy%20main/badge.svg?branch=main) ![Build and deploy dev](https://github.com/MikkelHegn/AcceleratorDemoResult/workflows/Build%20and%20deploy%20main/badge.svg?branch=dev)
+
 # Welcome to the WebAPI-CosmosDB-Storage-Functions accelerator
 
 This accelerator pattern is a good fit for scenarios where you want to build a backend system to receive, process and store any type of data.

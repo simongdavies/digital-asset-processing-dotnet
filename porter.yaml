@@ -4,7 +4,7 @@
 # Uncomment out the sections below to take full advantage of what Porter can do!
 
 name: github-accelerator
-version: 0.4.1
+version: 0.4.2
 description: "A Porter bundle that deploys all artifacts as a single distributed application."
 tag: squillace/github-accelerator 
 

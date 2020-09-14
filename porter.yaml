@@ -24,6 +24,7 @@ install:
       description: "Logging into Azure..."  
       arguments:
         - login
+      suppress-output: true
       flags:
         service-principal:
         username: "'{{bundle.credentials.AZURE_DEPLOY_CLIENT_ID}}'"
@@ -32,6 +33,7 @@ install:
         output: table
   - az: 
       description: "Setting the Azure subscription...."
+      suppress-output: true
       arguments: 
         - "account" 
         - "set" 
@@ -39,6 +41,7 @@ install:
         subscription: "{{ bundle.credentials.AZURE_DEPLOY_SUBSCRIPTION_ID }}"
   - az:
       description: "Creating the Azure resource group if it doesn't exist...."
+      suppress-output: true
       arguments:
         - group
         - create
@@ -68,6 +71,7 @@ install:
   - exec:
       command: bash
       description: "Using bash file to modify parameters."
+      suppress-output: true
       arguments:
         - ./modify-params.sh
 
@@ -103,6 +107,7 @@ install:
 
   - az:
       description: "deploying the template imperatively"
+      suppress-output: true
       arguments:
         - deployment
         - group
@@ -115,6 +120,7 @@ install:
 
   - az:
       description: "Deploying the WebApi application..."
+      suppress-output: true
       arguments:
         - webapp
         - deployment
@@ -126,6 +132,7 @@ install:
         src: webapi.zip
   - az:
       description: "Deploying the Azure Function application..."
+      suppress-output: true
       arguments:
         - functionapp
         - deployment

@@ -52,6 +52,37 @@ jobs:
       with:
         name: function
         path: './output/function'
+    
+  porter-build:
+
+    runs-on: ubuntu-latest
+    needs: [ build-function, build-webapi ]
+    steps:
+    - uses: actions/checkout@v1
+    - name: Zip for deployment
+      run: |
+        sudo apt-get install zip -y
+        zip 
+
+    - name: Get application artifacts
+      uses: actions/download-artifact@v2
+      with:
+        path: './output/'
+    - name: Zip the function and webapi for source deployment
+      run: | 
+        pushd ./output/function/; zip -r ../../function.zip .; popd 
+        pushd ./output/webapi/; zip -r ../../webapi.zip .; popd   
+    - name: Setup Porter
+      uses: deislabs/porter-gh-action@v0.1.1
+    - name: Pull in jq mixin
+      run: porter mixins install jq --url https://github.com/squillace/porter-jq/releases/download --version v0.1.0
+    - uses: azure/docker-login@v1
+      name: Docker Login
+      with:
+        username: ${{ secrets.DOCKER_USERNAME }}
+        password: ${{ secrets.DOCKER_PASSWORD }}
+    - name: Porter Publish
+      run: porter publish  
 
   deploy-webapi:
     name: Deploy Web Api

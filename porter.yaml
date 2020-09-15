@@ -1,0 +1,210 @@
+# This is the configuration for Porter
+# You must define steps for each action, but the rest is optional
+# See https://porter.sh/author-bundles for documentation on how to configure your bundle
+# Uncomment out the sections below to take full advantage of what Porter can do!
+
+name: github-accelerator
+version: 0.4.3
+description: "A Porter bundle that deploys infrastructure and artifacts as a single distributed application."
+tag: squillace/github-accelerator 
+
+# If you want to customize the Dockerfile in use, uncomment the line below and update the referenced file. 
+# See https://porter.sh/custom-dockerfile/
+dockerfile: Dockerfile.tmpl
+
+mixins:
+  - exec
+  - arm
+  - az
+  - jq
+  
+install:
+
+  - az:
+      description: "Logging into Azure..."  
+      arguments:
+        - login
+      suppress-output: true
+      flags:
+        service-principal:
+        username: "'{{bundle.credentials.AZURE_DEPLOY_CLIENT_ID}}'"
+        password: "'{{bundle.credentials.AZURE_DEPLOY_CLIENT_SECRET}}'"
+        tenant: "'{{bundle.credentials.AZURE_DEPLOY_TENANT_ID}}'"
+        output: table
+  - az: 
+      description: "Setting the Azure subscription...."
+      suppress-output: true
+      arguments: 
+        - "account" 
+        - "set" 
+      flags:
+        subscription: "{{ bundle.credentials.AZURE_DEPLOY_SUBSCRIPTION_ID }}"
+  - az:
+      description: "Creating the Azure resource group if it doesn't exist...."
+      suppress-output: true
+      arguments:
+        - group
+        - create
+      flags:
+        name: "'{{bundle.parameters.resourceGroup}}'"
+        location: "'{{bundle.parameters.region}}'"
+        output: table
+
+#  - arm:
+#      description: "Install the Github Accelerator Azure Resource Manager template."
+#      type: arm
+#      template: "src/arm/azuredeploy.json"
+#      name: github-accelerator
+#      resourceGroup: "{{ bundle.parameters.resourceGroup }}"
+#      parameters:
+#        defaultResourceNamePrefix: "{{ bundle.parameters.defaultResourceNamePrefix}}"
+#        storageAccountName: "{{bundle.parameters.storageAccountName}}"
+#        cosmosAccountName: "{{bundle.parameters.cosmosAccountName}}"
+#        cosmosCollectionName: "{{bundle.parameters.cosmosCollectionName}}"
+#        cosmosDatabaseName: "{{bundle.parameters.cosmosDatabaseName}}"
+#        applicationInsightsName: "{{bundle.parameters.applicationInsightsName}}"
+#        functionAppName: "{{bundle.parameters.functionAppName}}"
+#        webAppName: "{{bundle.parameters.webAppName}}"
+#      outputs:
+#        - name: "MYSQL_HOST"
+#          key: "MYSQL_HOST"
+  - exec:
+      command: bash
+      description: "Using bash file to modify parameters."
+      suppress-output: true
+      arguments:
+        - ./modify-params.sh
+
+#  - jq:
+#      description: "Adjusting the template parameters...."
+#      arguments:
+#        - --arg 
+#        - "PREFIX {{bundle.parameters.defaultResourceNamePrefix}}"
+#        - --arg
+#        - "STORAGE {{bundle.parameters.storageAccountName}}"
+#        - --arg
+#        - "COSACCNAME {{bundle.parameters.cosmosAccountName}}"
+#        - --arg
+#        - "COSCOLLNAME {{bundle.parameters.cosmosCollectionName}}"
+#        - --arg 
+#        - "COSDBNAME {{bundle.parameters.cosmosDatabaseName}}"
+#        - --arg
+#        - "APPINS {{bundle.parameters.applicationInsightsName}}"
+#        - --arg
+#        - "FUNCNAME {{bundle.parameters.functionAppName}}"
+#        - --arg
+#        - "WEBAPPNAME {{bundle.parameters.webAppName}}"
+#        - "'{{ bundle.parameters.JQ_FILTER }}'"
+#        - 'src/arm/azuredeploy.parameters.json'
+#      output:
+#        - name: modified-params
+#          path: /src/arm/modified-params.json 
+#  - exec:
+#      command: bash
+#      description: "testing for output"
+#      flags:
+#        c: '"ls {{bundle.outputs.modified-params}}"'
+
+  - az:
+      description: "deploying the template imperatively"
+      suppress-output: true
+      arguments:
+        - deployment
+        - group
+        - create
+      flags:
+        resource-group: "{{bundle.parameters.resourceGroup}}"
+        name: rollout1
+        template-file: '"src/arm/azuredeploy.json"'
+        parameters: '"@src/arm/modified-parameters.json"' 
+
+  - az:
+      description: "Deploying the WebApi application..."
+      suppress-output: true
+      arguments:
+        - webapp
+        - deployment
+        - source
+        - config-zip
+      flags:
+        name: '"{{bundle.parameters.webAppName}}"'
+        resource-group: '"{{bundle.parameters.resourceGroup}}"'
+        src: webapi.zip
+  - az:
+      description: "Deploying the Azure Function application..."
+      suppress-output: true
+      arguments:
+        - functionapp
+        - deployment
+        - source
+        - config-zip
+      flags:
+        name: '"{{bundle.parameters.functionAppName}}"'
+        resource-group: '"{{bundle.parameters.resourceGroup}}"'
+        src: function.zip
+
+upgrade:
+  - exec:
+      description: "World 2.0"
+      command: ./helpers.sh
+      arguments:
+        - upgrade
+
+uninstall:
+  - exec:
+      description: "Uninstall Hello World"
+      command: ./helpers.sh
+      arguments:
+        - uninstall
+
+# Below is an example of how to define credentials
+# See https://porter.sh/author-bundles/#credentials
+credentials:
+#  - name: kubeconfig
+#    path: /root/.kube/config
+#  - name: username
+#    env: USERNAME
+  - name: AZURE_DEPLOY_CLIENT_ID
+    env: CLIENT_ID
+  - name: AZURE_DEPLOY_CLIENT_SECRET
+    env: CLIENT_SECRET
+  - name: AZURE_DEPLOY_SUBSCRIPTION_ID
+    env: SUBSCRIPTION_ID
+  - name: AZURE_DEPLOY_TENANT_ID
+    env: TENANT_ID
+# Below is an example of how to define parameters
+# See https://porter.sh/author-bundles/#parameters
+parameters:
+  - name: region
+    type: string
+    default: westus2
+  - name: resourceGroup
+    type: string
+    default: "zdemo"
+  - name: defaultResourceNamePrefix
+    type: string
+    default: "zdemo"
+  - name: storageAccountName
+    type: string
+    default: "zdemosta"
+  - name: cosmosAccountName
+    type: string
+    default: "zdemocosmos"
+  - name: cosmosCollectionName
+    type: string
+    default: "metadata"
+  - name: cosmosDatabaseName
+    type: string
+    default: "media"
+  - name: applicationInsightsName
+    type: string
+    default: "zdemoinsights"
+  - name: functionAppName
+    type: string
+    default: "zdemofunc"
+  - name: webAppName
+    type: string
+    default: "zdemoapi"
+  - name: JQ_FILTER
+    type: string
+    default: ".parameters.defaultResourceNamePrefix.value=$PREFIX | .parameters.storageAccountName.value=$STORAGE | .parameters.cosmosAccountName.value=$COSACCNAME | .parameters.cosmosCollectionName.value=$COSCOLLNAME | .parameters.cosmosDatabaseName.value=$COSDBNAME | .parameters.applicationInsightsName.value=$APPINS | .parameters.functionAppName.value=$FUNCNAME | .parameters.webAppName.value=$WEBAPPNAME"

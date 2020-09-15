@@ -1,0 +1,20 @@
+# See https://docs.docker.com/engine/reference/builder/#dockerignore-file
+# Put files here that you don't want copied into your bundle's invocation image
+
+# Ignore everything
+**
+.git/**
+/src/**
+
+
+# Allow specific files and directories in the Porter bundle
+!/.cnab/**
+!porter.yaml
+!Dockerfile
+!/output/**
+!/src/arm/**
+!function.zip
+!webapi.zip
+!modify-params.sh
+
+

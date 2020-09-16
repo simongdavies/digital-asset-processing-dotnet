@@ -5,7 +5,7 @@
 
 name: github-accelerator
 version: 0.4.6
-description: "A Porter bundle that deploys infrastructure and artifacts as a single distributed application."
+description: "A Porter bundle that deploys infrastructure and artifacts as a single distributed application. Uninstall removes the entire solution including infrastructure."
 tag: squillace/github-accelerator 
 
 # If you want to customize the Dockerfile in use, uncomment the line below and update the referenced file. 

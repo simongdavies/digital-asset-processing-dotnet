@@ -194,18 +194,18 @@
         {
             "type": "Microsoft.Web/serverfarms",
             "apiVersion": "2018-02-01",
-            "name":"[variables('functionAppHostingPlanName')]",
-            "location":"[resourceGroup().location]",
-            "properties":{  
-                "name":"[variables('functionAppHostingPlanName')]",
-                "computeMode":"Dynamic"
+            "name": "[variables('functionAppHostingPlanName')]",
+            "location": "[resourceGroup().location]",
+            "properties": {
+                "name": "[variables('functionAppHostingPlanName')]",
+                "computeMode": "Dynamic"
             },
-            "sku":{
-                "name":"Y1",
-                "tier":"Dynamic",
-                "size":"Y1",
-                "family":"Y",
-                "capacity":0
+            "sku": {
+                "name": "Y1",
+                "tier": "Dynamic",
+                "size": "Y1",
+                "family": "Y",
+                "capacity": 0
             }
         },
         {
@@ -257,13 +257,13 @@
         {
             "type": "Microsoft.Web/serverfarms",
             "apiVersion": "2020-06-01",
-            "name":"[variables('webAppHostingPlanName')]",
-            "location":"[resourceGroup().location]",
-            "properties":{
-                "name":"[variables('webAppHostingPlanName')]"
+            "name": "[variables('webAppHostingPlanName')]",
+            "location": "[resourceGroup().location]",
+            "properties": {
+                "name": "[variables('webAppHostingPlanName')]"
             },
-            "sku":{
-                "name":"[variables('webAppSku')]",
+            "sku": {
+                "name": "[variables('webAppSku')]",
                 "capacity": 1
             }
         },
@@ -277,7 +277,81 @@
             ],
             "properties": {
                 "name": "[parameters('webAppName')]",
-                "serverFarmId": "[resourceId('Microsoft.Web/serverfarms', variables('webAppHostingPlanName'))]"
+                "serverFarmId": "[resourceId('Microsoft.Web/serverfarms', variables('webAppHostingPlanName'))]",
+                "siteConfig": {
+                    "appSettings": [
+                        {
+                            "name": "APPINSIGHTS_INSTRUMENTATIONKEY",
+                            "value": "[reference(resourceId('microsoft.insights/components/', parameters('applicationInsightsName')), '2020-02-02-preview').InstrumentationKey]",
+                            "slotSetting": true
+                        },
+                        {
+                            "name": "APPINSIGHTS_PROFILERFEATURE_VERSION",
+                            "value": "1.0.0",
+                            "slotSetting": true
+                        },
+                        {
+                            "name": "APPINSIGHTS_SNAPSHOTFEATURE_VERSION",
+                            "value": "1.0.0",
+                            "slotSetting": true
+                        },
+                        {
+                            "name": "APPLICATIONINSIGHTS_CONNECTION_STRING",
+                            "value": "[concat('InstrumentationKey=', reference(resourceId('microsoft.insights/components/', parameters('applicationInsightsName')), '2020-02-02-preview').InstrumentationKey, ';IngestionEndpoint=https://westeurope-1.in.applicationinsights.azure.com/')]",
+                            "slotSetting": false
+                        },
+                        {
+                            "name": "ApplicationInsightsAgent_EXTENSION_VERSION",
+                            "value": "~2",
+                            "slotSetting": true
+                        },
+                        {
+                            "name": "Cosmos:PrimaryKey",
+                            "value": "[listKeys(resourceId('Microsoft.DocumentDB/databaseAccounts', parameters('cosmosAccountName')), '2020-04-01').primaryMasterKey]",
+                            "slotSetting": false
+                        },
+                        {
+                            "name": "DiagnosticServices_EXTENSION_VERSION",
+                            "value": "~3",
+                            "slotSetting": true
+                        },
+                        {
+                            "name": "InstrumentationEngine_EXTENSION_VERSION",
+                            "value": "disabled",
+                            "slotSetting": true
+                        },
+                        {
+                            "name": "SnapshotDebugger_EXTENSION_VERSION",
+                            "value": "disabled",
+                            "slotSetting": true
+                        },
+                        {
+                            "name": "WEBSITE_HTTPLOGGING_RETENTION_DAYS",
+                            "value": "7",
+                            "slotSetting": false
+                        },
+                        {
+                            "name": "WEBSITE_NODE_DEFAULT_VERSION",
+                            "value": "6.9.1",
+                            "slotSetting": false
+                        },
+                        {
+                            "name": "XDT_MicrosoftApplicationInsights_BaseExtensions",
+                            "value": "disabled",
+                            "slotSetting": true
+                        },
+                        {
+                            "name": "XDT_MicrosoftApplicationInsights_Mode",
+                            "value": "recommended",
+                            "slotSetting": true
+                        },
+                        {
+                            "name": "XDT_MicrosoftApplicationInsights_PreemptSdk",
+                            "value": "1",
+                            "slotSetting": true
+                        }
+                    ]
+                }
             }
         },
         {

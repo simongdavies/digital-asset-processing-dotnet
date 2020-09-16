@@ -4,7 +4,7 @@
 # Uncomment out the sections below to take full advantage of what Porter can do!
 
 name: github-accelerator
-version: 0.4.3
+version: 0.4.5
 description: "A Porter bundle that deploys infrastructure and artifacts as a single distributed application."
 tag: squillace/github-accelerator 
 
@@ -145,17 +145,22 @@ install:
 
 upgrade:
   - exec:
-      description: "World 2.0"
-      command: ./helpers.sh
-      arguments:
-        - upgrade
+      description: "Upgrade is not currently supported."
+      command: bash
+      flags:
+        c: '"echo Not yet implemented."'
 
 uninstall:
-  - exec:
-      description: "Uninstall Hello World"
-      command: ./helpers.sh
+  - az:
+      description: "Deleting the entire resource group."
       arguments:
-        - uninstall
+        - group 
+        - delete
+      flags:
+        name: "{{bundle.parameters.resourceGroup}}"
+        yes: ""
+        no-wait: ""
+
 
 # Below is an example of how to define credentials
 # See https://porter.sh/author-bundles/#credentials

@@ -10,6 +10,7 @@ tag: squillace/github-accelerator
 
 # If you want to customize the Dockerfile in use, uncomment the line below and update the referenced file. 
 # See https://porter.sh/custom-dockerfile/
+# Here we use the PORTER_MIXIN line to optimize the build time of the bundle in dev usage.
 dockerfile: Dockerfile.tmpl
 
 mixins:

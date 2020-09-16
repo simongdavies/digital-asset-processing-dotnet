@@ -94,7 +94,7 @@ jobs:
         username: ${{ secrets.GHCR_USERNAME }}
         password: ${{ secrets.GHCR_PASSWORD }}
     - name: Porter publish to ghcr.io
-      run: TODO: Modify the Porter.yaml tag value 
+      run: "echo Modify the Porter.yaml tag value"
 
   deploy-webapi:
     name: Deploy Web Api

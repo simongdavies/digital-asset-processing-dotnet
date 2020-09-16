@@ -92,7 +92,7 @@ jobs:
       with:
         login-server: ghcr.io
         username: ${{ secrets.GHCR_USERNAME }}
-        password: ${{ secrets.GHCR_PASSWORD }}
+        password: ${{ secrets.GHCR_SECRET }}
     - name: Porter publish to ghcr.io
       run: "echo Modify the Porter.yaml tag value"
 

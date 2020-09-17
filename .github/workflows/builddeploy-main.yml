@@ -72,7 +72,7 @@ jobs:
         # Add bicep to your PATH (requires admin)
         sudo mv ./bicep /usr/local/bin/bicep
         bicep build src/arm/main.bicep
-        ls src/arm/
+
     - name: Upload compiled arm template 
       uses: actions/upload-artifact@v2
       with:
@@ -98,8 +98,9 @@ jobs:
       run: | 
         pushd ./output/function/; zip -r ../../function.zip .; popd 
         pushd ./output/webapi/; zip -r ../../webapi.zip .; popd
-        ls output/
-        cp ./output/arm/main.json .   
+        ls output/arm
+        cp ./output/arm/main.json src/arm/ 
+        ls src/arm/
     - name: Setup Porter
       uses: deislabs/porter-gh-action@v0.1.1
     - name: Pull in jq mixin

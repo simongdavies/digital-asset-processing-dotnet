@@ -72,6 +72,8 @@ jobs:
         # Add bicep to your PATH (requires admin)
         sudo mv ./bicep /usr/local/bin/bicep
         bicep build src/arm/main.bicep
+        ls 
+        ls src/arm/
     - name: Upload compiled arm template 
       uses: actions/upload-artifact@v2
       with:

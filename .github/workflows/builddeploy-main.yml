@@ -105,7 +105,7 @@ jobs:
       uses: deislabs/porter-gh-action@v0.1.1
     - name: Pull in jq mixin
       run: porter mixins install jq --url https://github.com/squillace/porter-jq/releases/download --version v0.1.0
-    - name: Login to DockerHub
+    - name: Login to DockerHub OCI Registry
       uses: docker/login-action@v1
       with:
         username: ${{ secrets.DOCKER_USERNAME }}
@@ -117,12 +117,12 @@ jobs:
 #        password: ${{ secrets.DOCKER_PASSWORD }}
     - name: Porter Publish
       run: porter publish
-    - name: Login to GitHub Packages Docker Registry
+    - name: Login to GitHub Packages OCI Registry
       uses: docker/login-action@v1
       with:
         registry: ghcr.io
         username: ${{ github.repository_owner }}
-        password: ${{ secrets.GITHUB_TOKEN }}
+        password: ${{ github.token }}
     - name: Porter publish to ghcr.io
       run: "echo Modify the Porter.yaml tag value" 
 #      - name: Retag bundle for Docker Hub

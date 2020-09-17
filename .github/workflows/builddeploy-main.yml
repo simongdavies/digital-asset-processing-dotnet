@@ -72,8 +72,13 @@ jobs:
         # Add bicep to your PATH (requires admin)
         sudo mv ./bicep /usr/local/bin/bicep
         bicep build src/arm/main.bicep
+    - name: Upload Artifact 
+      uses: actions/upload-artifact@v2
+      with:
+        name: arm
+        path: './output/arm'
     
-  porter-build-for-DockerHub:
+  porter-build-and-push:
 
     runs-on: ubuntu-latest
     needs: [ build-function, build-webapi, bicep-compile ]
@@ -96,21 +101,30 @@ jobs:
       uses: deislabs/porter-gh-action@v0.1.1
     - name: Pull in jq mixin
       run: porter mixins install jq --url https://github.com/squillace/porter-jq/releases/download --version v0.1.0
-    - uses: azure/docker-login@v1
-      name: Docker Login
+    - name: Login to DockerHub
+      uses: docker/login-action@v1
       with:
         username: ${{ secrets.DOCKER_USERNAME }}
         password: ${{ secrets.DOCKER_PASSWORD }}
+#    - uses: azure/docker-login@v1
+#      name: Docker Login
+#      with:
+#        username: ${{ secrets.DOCKER_USERNAME }}
+#        password: ${{ secrets.DOCKER_PASSWORD }}
     - name: Porter Publish
       run: porter publish
-    - uses: azure/docker-login@v1
-      name: Docker login to ghcr.io
+    - name: Login to GitHub Packages Docker Registry
+      uses: docker/login-action@v1
       with:
-        login-server: ghcr.io
-        username: ${{ secrets.GHCR_USERNAME }}
-        password: ${{ secrets.GHCR_SECRET }}
+        registry: ghcr.io
+        username: ${{ github.repository_owner }}
+        password: ${{ secrets.GHCR_PASSWORD }}
     - name: Porter publish to ghcr.io
-      run: "echo Modify the Porter.yaml tag value"
+      run: "echo Modify the Porter.yaml tag value" 
+#      - name: Retag bundle for Docker Hub
+#        run: |
+#          sed -i.bu 's/ghcr.io\/squillace\/gh-cnab\//squillace\//g' ./porter.yaml
+
 
   deploy-webapi:
     name: Deploy Web Api

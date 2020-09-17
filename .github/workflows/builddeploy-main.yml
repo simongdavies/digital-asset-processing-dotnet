@@ -76,7 +76,7 @@ jobs:
       uses: actions/upload-artifact@v2
       with:
         name: arm
-        path: 'main.bicep'
+        path: 'src/arm/main.bicep'
     
   porter-build-and-push:
 

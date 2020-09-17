@@ -117,7 +117,8 @@ install:
         resource-group: "{{bundle.parameters.resourceGroup}}"
         name: rollout1
         template-file: '"src/arm/azuredeploy.json"'
-        parameters: '"@src/arm/modified-parameters.json"' 
+#        parameters: '"@src/arm/modified-parameters.json"' 
+        parameters: '"@main.json"'
 
   - az:
       description: "Deploying the WebApi application..."

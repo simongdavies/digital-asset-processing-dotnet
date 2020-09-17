@@ -76,7 +76,7 @@ jobs:
       uses: actions/upload-artifact@v2
       with:
         name: arm
-        path: 'src/arm/main.bicep'
+        path: './output/arm'
     
   porter-build-and-push:
 
@@ -97,7 +97,7 @@ jobs:
       run: | 
         pushd ./output/function/; zip -r ../../function.zip .; popd 
         pushd ./output/webapi/; zip -r ../../webapi.zip .; popd
-        cp ./output/main.json .   
+        cp ./output/arm/main.json .   
     - name: Setup Porter
       uses: deislabs/porter-gh-action@v0.1.1
     - name: Pull in jq mixin

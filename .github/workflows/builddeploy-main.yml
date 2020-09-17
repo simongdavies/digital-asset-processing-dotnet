@@ -122,7 +122,7 @@ jobs:
       with:
         registry: ghcr.io
         username: ${{ github.repository_owner }}
-        password: ${{ secrets.GHCR_PASSWORD }}
+        password: ${{ secrets.GITHUB_TOKEN }}
     - name: Porter publish to ghcr.io
       run: "echo Modify the Porter.yaml tag value" 
 #      - name: Retag bundle for Docker Hub

@@ -10,7 +10,7 @@ on:
       - main 
     paths:
       - 'src/function/**'
-      - 'src/arm/**'
+      - '.github/workflows/**'
       - 'src/webapi/**'
       - 'porter.yaml'
       - 'modify-params.sh'

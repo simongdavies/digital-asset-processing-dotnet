@@ -122,13 +122,12 @@ jobs:
       with:
         registry: ghcr.io
         username: ${{ github.repository_owner }}
-        password: ${{ github.token }}
+        password: ${{ secrets.GHCR_PASSWORD }}
+    - name: Retag bundle for ghcr.io
+      run: |
+        sed -i.bu 's/squillace\//ghcr.io\/microsoft\/github-accelerator\/squillace\//g' ./porter.yaml
     - name: Porter publish to ghcr.io
-      run: "echo Modify the Porter.yaml tag value" 
-#      - name: Retag bundle for Docker Hub
-#        run: |
-#          sed -i.bu 's/ghcr.io\/squillace\/gh-cnab\//squillace\//g' ./porter.yaml
-
+      run: porter publish
 
   deploy-webapi:
     name: Deploy Web Api

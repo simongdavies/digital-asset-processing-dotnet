@@ -113,6 +113,11 @@ jobs:
 
 #    - name: Porter publish to Docker Hub
 #      run: porter publish
+
+    - name: Setup Porter
+      uses: deislabs/porter-gh-action@v0.1.1
+    - name: Pull in jq mixin
+      run: porter mixins install jq --url https://github.com/squillace/porter-jq/releases/download --version v0.1.0
     - name: Login to GitHub Packages OCI Registry
       uses: docker/login-action@v1
       with:

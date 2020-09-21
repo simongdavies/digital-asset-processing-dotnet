@@ -1,7 +1,6 @@
 Dockerfile
 .cnab/
 output/
-src/
 src/function/.vscode/
 src/function/bin/
 src/function/obj/

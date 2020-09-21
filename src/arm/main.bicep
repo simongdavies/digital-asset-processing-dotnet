@@ -223,7 +223,7 @@ resource webApp 'Microsoft.Web/sites@2018-11-01' = {
         }
         {
           name: 'Cosmos:PrimaryKey'
-          value: cosmos.properties.primaryMasterKey
+          value: listKeys(cosmos.id, cosmos.apiVersion).primaryMasterKey
           slotSetting: false
         }
         {

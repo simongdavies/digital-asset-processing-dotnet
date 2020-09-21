@@ -243,7 +243,7 @@ resource webApp 'Microsoft.Web/sites@2018-11-01' = {
         }
         {
           name: 'WEBSITE_HTTPLOGGING_RETENTION_DAYS'
-          value: 7
+          value: '7'
           slotSetting: false
         }
         {
@@ -263,7 +263,7 @@ resource webApp 'Microsoft.Web/sites@2018-11-01' = {
         }
         {
           name: 'XDT_MicrosoftApplicationInsights_PreemptSdk'
-          value: 1
+          value: '1'
           slotSetting: true
         }
       ]

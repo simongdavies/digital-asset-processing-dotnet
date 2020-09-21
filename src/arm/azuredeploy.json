@@ -3,73 +3,46 @@
     "contentVersion": "1.0.0.0",
     "parameters": {
         "defaultResourceNamePrefix": {
-            "type": "string",
-            "metadata": {
-                "description": "Default prefix for all resources - can be overridden"
-            }
+            "type": "string"
         },
         "functionAppName": {
             "type": "string",
-            "defaultValue": "[concat(parameters('defaultResourceNamePrefix'), 'func')]",
-            "metadata": {
-                "description": "description"
-            }
+            "defaultValue": "[format('{0}func', parameters('defaultResourceNamePrefix'))]"
         },
         "webAppName": {
             "type": "string",
-            "defaultValue": "[concat(parameters('defaultResourceNamePrefix'), 'api')]",
-            "metadata": {
-                "description": "description"
-            }
+            "defaultValue": "[format('{0}api',parameters('defaultResourceNamePrefix'))]"
         },
         "storageAccountName": {
             "type": "string",
-            "defaultValue": "[concat(parameters('defaultResourceNamePrefix'), 'sta', uniqueString(resourceGroup().name))]",
-            "maxLength": 24,
-            "metadata": {
-                "description": "Name of the Storage account"
-            }
+            "defaultValue": "[format('{0}sta{1}', parameters('defaultResourceNamePrefix'), uniqueString(resourceGroup().name))]",
+            "maxLength": 24
         },
         "cosmosAccountName": {
             "type": "string",
-            "defaultValue": "[concat(parameters('defaultResourceNamePrefix'), 'cosmos')]",
-            "metadata": {
-                "description": "Name of the Cosmos account"
-            }
+            "defaultValue": "[format('{0}cosmos', parameters('defaultResourceNamePrefix'))]"
         },
         "cosmosDatabaseName": {
             "type": "string",
-            "defaultValue": "media",
-            "metadata": {
-                "description": "Name of the Cosmos database"
-            }
+            "defaultValue": "media"
         },
         "cosmosCollectionName": {
             "type": "string",
-            "defaultValue": "metadata",
-            "metadata": {
-                "description": "Name of the Cosmos collection"
-            }
+            "defaultValue": "metadata"
         },
         "applicationInsightsName": {
             "type": "string",
-            "defaultValue": "[concat(parameters('defaultResourceNamePrefix'), 'insights')]",
-            "metadata": {
-                "description": "description"
-            }
+            "defaultValue": "[format('{0}insights', parameters('defaultResourceNamePrefix'))]"
         },
         "cognitiveServiceName": {
             "type": "string",
-            "defaultValue": "[concat(parameters('defaultResourceNamePrefix'), 'ai')]",
-            "metadata": {
-                "description": "description"
-            }
+            "defaultValue": "[format('{0}ai',parameters('defaultResourceNamePrefix'))]"
         }
     },
     "variables": {
-        "functionStorageAccountName": "[concat(parameters('functionAppName'), uniqueString(resourceGroup().name))]",
-        "functionAppHostingPlanName": "[concat(parameters('functionAppName'), '-hosting-plan')]",
-        "webAppHostingPlanName": "[concat(parameters('webAppName'), '-hosting-plan')]",
+        "functionStorageAccountName": "[format('{0}{1}', parameters('functionAppName'), uniqueString(resourceGroup().name))]",
+        "functionAppHostingPlanName": "[format('{0}-hosting-plan', parameters('functionAppName'))]",
+        "webAppHostingPlanName": "[format('{0}-hosting-plan', parameters('webAppName'))]",
         "webAppSku": "P1v2",
         "cognitiveServiceSku": "S0"
     },
@@ -112,8 +85,8 @@
             }
         },
         {
+            "name": "[format('{0}/{1}', parameters('cosmosAccountName'), parameters('cosmosDatabaseName'))]",
             "type": "Microsoft.DocumentDB/databaseAccounts/sqlDatabases",
-            "name": "[concat(parameters('cosmosAccountName'), '/', parameters('cosmosDatabaseName'))]",
             "apiVersion": "2020-04-01",
             "dependsOn": [
                 "[resourceId('Microsoft.DocumentDB/databaseAccounts/', parameters('cosmosAccountName'))]"
@@ -128,8 +101,8 @@
             }
         },
         {
+            "name": "[format('{0}/{1}/{2}', parameters('cosmosAccountName'), parameters('cosmosDatabaseName'), parameters('cosmosCollectionName'))]",
             "type": "Microsoft.DocumentDb/databaseAccounts/sqlDatabases/containers",
-            "name": "[concat(parameters('cosmosAccountName'), '/', parameters('cosmosDatabaseName'), '/', parameters('cosmosCollectionName'))]",
             "apiVersion": "2020-04-01",
             "dependsOn": [
                 "[resourceId('Microsoft.DocumentDB/databaseAccounts/sqlDatabases', parameters('cosmosAccountName'), parameters('cosmosDatabaseName'))]"
@@ -192,9 +165,9 @@
             }
         },
         {
+            "name": "[variables('functionAppHostingPlanName')]",
             "type": "Microsoft.Web/serverfarms",
             "apiVersion": "2018-02-01",
-            "name": "[variables('functionAppHostingPlanName')]",
             "location": "[resourceGroup().location]",
             "properties": {
                 "name": "[variables('functionAppHostingPlanName')]",
@@ -255,9 +228,9 @@
             }
         },
         {
+            "name": "[variables('webAppHostingPlanName')]",
             "type": "Microsoft.Web/serverfarms",
             "apiVersion": "2020-06-01",
-            "name": "[variables('webAppHostingPlanName')]",
             "location": "[resourceGroup().location]",
             "properties": {
                 "name": "[variables('webAppHostingPlanName')]"
@@ -355,9 +328,9 @@
             }
         },
         {
+            "name": "[parameters('cognitiveServiceName')]",
             "type": "Microsoft.CognitiveServices/accounts",
             "apiVersion": "2017-04-18",
-            "name": "[parameters('cognitiveServiceName')]",
             "location": "[resourceGroup().location]",
             "sku": {
                 "name": "[variables('cognitiveServiceSku')]"

@@ -119,6 +119,7 @@ install:
 #        template-file: '"src/arm/azuredeploy.json"'
 # USING the bicep file for now
         template-file: '"main.json"'
+        parameters: '"defaultResourceNamePrefix=${{ bundle.parameters.defaultResourceNamePrefix }}"'
 #        parameters: '"@src/arm/modified-parameters.json"' 
 #        parameters: '"@main.json"'
 

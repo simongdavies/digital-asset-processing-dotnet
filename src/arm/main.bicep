@@ -51,7 +51,7 @@ resource cosmos 'Microsoft.DocumentDB/databaseAccounts@2020-04-01' = {
 }
 
 resource db 'Microsoft.DocumentDB/databaseAccounts/sqlDatabases@2020-04-01' = {
-  name: '${cosmos.name}/${cosmosDatabaseName}'
+  name: '${cosmosAccountName}/${cosmosDatabaseName}'
   properties: {
     resource: {
       id: cosmosDatabaseName
@@ -63,7 +63,7 @@ resource db 'Microsoft.DocumentDB/databaseAccounts/sqlDatabases@2020-04-01' = {
 }
 
 resource collection 'Microsoft.DocumentDb/databaseAccounts/sqlDatabases/containers@2020-04-01' = {
-  name: '${db.name}/${cosmosCollectionName}'
+  name: '${cosmosAccountName}/${cosmosDatabaseName}/${cosmosCollectionName}'
   properties: {
     resource: {
       id: cosmosCollectionName
@@ -194,6 +194,80 @@ resource webApp 'Microsoft.Web/sites@2018-11-01' = {
   properties: {
     name: webAppName
     serverFarmId: webAppHostingPlan.id
+    siteConfig: {
+      appSettings: [
+        {
+          name: 'APPINSIGHTS_INSTRUMENTATIONKEY'
+          value: ai.properties.InstrumentationKey
+          slotSetting: true
+        }
+        {
+          name: 'APPINSIGHTS_PROFILERFEATURE_VERSION'
+          value: '1.0.0'
+          slotSetting: true
+        }
+        {
+          name: 'APPINSIGHTS_SNAPSHOTFEATURE_VERSION'
+          value: '1.0.0'
+          slotSetting: true
+        }
+        {
+          name: 'APPLICATIONINSIGHTS_CONNECTION_STRING'
+          value: 'InstrumentationKey=${ai.properties.InstrumentationKey};IngestionEndpoint=https://westeurope-1.in.applicationinsights.azure.com/'
+          slotSetting: false
+        }
+        {
+          name: 'ApplicationInsightsAgent_EXTENSION_VERSION'
+          value: '~2'
+          slotSetting: true
+        }
+        {
+          name: 'Cosmos:PrimaryKey'
+          value: listKeys(cosmos.id, cosmos.apiVersion).primaryMasterKey
+          slotSetting: false
+        }
+        {
+          name: 'DiagnosticServices_EXTENSION_VERSION'
+          value: '~3'
+          slotSetting: true
+        }
+        {
+          name: 'InstrumentationEngine_EXTENSION_VERSION'
+          value: 'disabled'
+          slotSetting: true
+        }
+        {
+          name: 'SnapshotDebugger_EXTENSION_VERSION'
+          value: 'disabled'
+          slotSetting: true
+        }
+        {
+          name: 'WEBSITE_HTTPLOGGING_RETENTION_DAYS'
+          value: '7'
+          slotSetting: false
+        }
+        {
+          name: 'WEBSITE_NODE_DEFAULT_VERSION'
+          value: '6.9.1'
+          slotSetting: false
+        }
+        {
+          name: 'XDT_MicrosoftApplicationInsights_BaseExtensions'
+          value: 'disabled'
+          slotSetting: true
+        }
+        {
+          name: 'XDT_MicrosoftApplicationInsights_Mode'
+          value: 'recommended'
+          slotSetting: true
+        }
+        {
+          name: 'XDT_MicrosoftApplicationInsights_PreemptSdk'
+          value: '1'
+          slotSetting: true
+        }
+      ]
+    }
   }
 }
 

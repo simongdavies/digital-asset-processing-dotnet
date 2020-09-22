@@ -124,7 +124,7 @@ jobs:
       with:
         registry: ghcr.io
         username: ${{ github.repository_owner }}
-        password: ${{ secrets.GHCR_PASSWORD }}
+        password: ${{ github.token }}
     - name: Retag bundle for ghcr.io
       run: |
         sed -i.bu 's/squillace\//ghcr.io\/squillace\/github-accelerators\//g' ./porter.yaml

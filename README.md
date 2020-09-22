@@ -1,4 +1,4 @@
-![Build and deploy main](https://github.com/MikkelHegn/AcceleratorDemoResult/workflows/Build%20and%20deploy%20main/badge.svg?branch=main) ![Build and deploy dev](https://github.com/MikkelHegn/AcceleratorDemoResult/workflows/Build%20and%20deploy%20dev/badge.svg?branch=dev)
+![Build and deploy main](https://github.com/microsoft/github-accelerators/workflows/Build%20and%20deploy%20main/badge.svg) ![Build and deploy dev](https://github.com/microsoft/github-accelerators/workflows/Build%20and%20deploy%20dev/badge.svg)
 
 # Welcome to the WebAPI-CosmosDB-Storage-Functions accelerator
 

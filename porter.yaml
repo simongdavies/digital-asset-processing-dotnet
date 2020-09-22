@@ -4,7 +4,7 @@
 # Uncomment out the sections below to take full advantage of what Porter can do!
 
 name: github-accelerator
-version: 0.4.10
+version: 0.4.11
 description: "A Porter bundle that deploys infrastructure and artifacts as a single distributed application. Uninstall removes the entire solution including infrastructure."
 tag: squillace/github-accelerator 
 
@@ -118,7 +118,7 @@ install:
         name: rollout1
 #        template-file: '"src/arm/azuredeploy.json"'
 # USING the bicep file for now
-        template-file: '"src/arm/main.json"'
+        template-file: '"main.json"'
 #        parameters: '"@src/arm/modified-parameters.json"' 
 #        parameters: '"@main.json"'
 

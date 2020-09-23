@@ -4,7 +4,7 @@
 # Uncomment out the sections below to take full advantage of what Porter can do!
 
 name: github-accelerator
-version: 0.4.19
+version: 0.4.20
 description: "A Porter bundle that deploys infrastructure and artifacts as a single distributed application. Uninstall removes the entire solution including infrastructure."
 tag: squillace/github-accelerator 
 
@@ -146,7 +146,7 @@ install:
         - source
         - config-zip
       flags:
-        name: '"{bundle.outputs.webApiName}}"'
+        name: '"{{bundle.outputs.webApiName}}"'
         resource-group: '"{{bundle.parameters.resourceGroup}}"'
         src: webapi.zip
   - az:
@@ -158,7 +158,7 @@ install:
         - source
         - config-zip
       flags:
-        name: '"{bundle.outputs.functionNamee}}"'
+        name: '"{{bundle.outputs.functionName}}"'
         resource-group: '"{{bundle.parameters.resourceGroup}}"'
         src: function.zip
 

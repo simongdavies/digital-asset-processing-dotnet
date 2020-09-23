@@ -4,7 +4,7 @@
 # Uncomment out the sections below to take full advantage of what Porter can do!
 
 name: github-accelerator
-version: 0.4.27
+version: 0.4.28
 description: "A Porter bundle that deploys infrastructure and artifacts as a single distributed application. Uninstall removes the entire solution including infrastructure."
 tag: squillace/github-accelerator 
 
@@ -132,7 +132,7 @@ install:
         name: rollout1
         template-file: '"main.json"'
         parameters: '"defaultResourceNamePrefix={{ bundle.parameters.defaultResourceNamePrefix }}"'
-        debug: 
+
       outputs:
         - name: webApiName
           jsonPath: "$.[*].parameters.webApiName.value"

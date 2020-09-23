@@ -4,7 +4,7 @@
 # Uncomment out the sections below to take full advantage of what Porter can do!
 
 name: github-accelerator
-version: 0.4.21
+version: 0.4.22
 description: "A Porter bundle that deploys infrastructure and artifacts as a single distributed application. Uninstall removes the entire solution including infrastructure."
 tag: squillace/github-accelerator 
 
@@ -133,9 +133,9 @@ install:
 #        parameters: '"@main.json"'
       outputs:
         - name: webApiName
-          jsonPath: '"$[*].parameters.webAppName.value"'
+          jsonPath: "$[*].parameters.webAppName.value"
         - name: functionName 
-          jsonPath: '"$[*].parameters.functionAppName.value"'
+          jsonPath: "$[*].parameters.functionAppName.value"
 
   - az:
       description: "Deploying the WebApi application..."
@@ -146,8 +146,8 @@ install:
         - source
         - config-zip
       flags:
-        name: '"{{bundle.outputs.webApiName}}"'
-        resource-group: '"{{bundle.parameters.resourceGroup}}"'
+        name: "{{bundle.outputs.webApiName}}"
+        resource-group: "{{bundle.parameters.resourceGroup}}"
         src: webapi.zip
   - az:
       description: "Deploying the Azure Function application..."

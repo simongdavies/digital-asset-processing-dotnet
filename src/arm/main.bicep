@@ -51,7 +51,7 @@ resource cosmos 'Microsoft.DocumentDB/databaseAccounts@2020-04-01' = {
 }
 
 resource db 'Microsoft.DocumentDB/databaseAccounts/sqlDatabases@2020-04-01' = {
-  name: '${cosmosAccountName}/${cosmosDatabaseName}'
+  name: '${cosmos.name}/${cosmosDatabaseName}'
   properties: {
     resource: {
       id: cosmosDatabaseName
@@ -63,7 +63,7 @@ resource db 'Microsoft.DocumentDB/databaseAccounts/sqlDatabases@2020-04-01' = {
 }
 
 resource collection 'Microsoft.DocumentDb/databaseAccounts/sqlDatabases/containers@2020-04-01' = {
-  name: '${cosmosAccountName}/${cosmosDatabaseName}/${cosmosCollectionName}'
+  name: '${db.name}/${cosmosCollectionName}'
   properties: {
     resource: {
       id: cosmosCollectionName

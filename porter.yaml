@@ -139,26 +139,26 @@ install:
 
   - az:
       description: "Deploying the WebApi application..."
-      suppress-output: true
+      suppress-output: false
       arguments:
         - webapp
         - deployment
         - source
         - config-zip
       flags:
-        name: '"{{bundle.parameters.webAppName}}"'
+        name: '"{bundle.outputs.webApiName}}"'
         resource-group: '"{{bundle.parameters.resourceGroup}}"'
         src: webapi.zip
   - az:
       description: "Deploying the Azure Function application..."
-      suppress-output: true
+      suppress-output: false
       arguments:
         - functionapp
         - deployment
         - source
         - config-zip
       flags:
-        name: '"{{bundle.parameters.functionAppName}}"'
+        name: '"{bundle.outputs.functionNamee}}"'
         resource-group: '"{{bundle.parameters.resourceGroup}}"'
         src: function.zip
 

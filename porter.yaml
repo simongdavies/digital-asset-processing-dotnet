@@ -125,12 +125,9 @@ install:
       flags:
         resource-group: "{{bundle.parameters.resourceGroup}}"
         name: rollout1
-#        template-file: '"src/arm/azuredeploy.json"'
-# USING the bicep file for now
         template-file: '"main.json"'
         parameters: '"defaultResourceNamePrefix={{ bundle.parameters.defaultResourceNamePrefix }}"'
-#        parameters: '"@src/arm/modified-parameters.json"' 
-#        parameters: '"@main.json"'
+        debug: 
       outputs:
         - name: webApiName
           jsonPath: "$.[parameters].webApiName.[value]"

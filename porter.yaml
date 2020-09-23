@@ -142,7 +142,7 @@ install:
       command: bash
       description: "stripping things"
       flags:
-          c: "echo {{bundle.outputs.webApiName}} | jq -r '.[]'"
+          c: '"echo {{bundle.outputs.webApiName}} | jq -r `.[]`"'
       outputs:
           - name: cleanWebName
             regex: '(.*)\s'
@@ -151,7 +151,7 @@ install:
       command: bash
       description: "stripping things"
       flags:
-          c: "echo {{bundle.outputs.functionName}} | jq -r '.[]'"
+          c: '"echo {{bundle.outputs.functionName}} | jq -r `.[]`"'
       outputs:
 
           - name: cleanFuncName

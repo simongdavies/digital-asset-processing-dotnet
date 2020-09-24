@@ -53,6 +53,27 @@ jobs:
         name: function
         path: './output/function'
     
+  bicep-compile:
+    runs-on: ubuntu-latest
+    needs: [ build-function, build-webapi ]
+    steps:
+    - uses: actions/checkout@v2
+    - name: Set up bicep
+      run: |
+        # Fetch the latest Bicep CLI binary
+        curl -Lo bicep https://github.com/Azure/bicep/releases/latest/download/bicep-linux-x64
+        # Mark it as executable
+        chmod +x ./bicep
+        # Add bicep to your PATH (requires admin)
+        sudo mv ./bicep /usr/local/bin/bicep
+        bicep build src/arm/main.bicep
+
+    - name: Upload compiled arm template 
+      uses: actions/upload-artifact@v2
+      with:
+        name: arm
+        path: './src/arm/'
+
   porter-build:
 
     runs-on: ubuntu-latest

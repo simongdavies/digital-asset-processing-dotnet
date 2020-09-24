@@ -102,18 +102,18 @@ jobs:
         # This is where the bundle will find it
         cp ./output/arm/main.json .
 
-    - name: Setup Porter
-      uses: deislabs/porter-gh-action@v0.1.1
-    - name: Pull in jq mixin
-      run: porter mixins install jq --url https://github.com/squillace/porter-jq/releases/download --version v0.1.0
-    - name: Login to DockerHub OCI Registry
-      uses: docker/login-action@v1
-      with:
-        username: ${{ secrets.DOCKER_USERNAME }}
-        password: ${{ secrets.DOCKER_PASSWORD }}
+#    - name: Setup Porter
+#      uses: deislabs/porter-gh-action@v0.1.1
+#    - name: Pull in jq mixin
+#      run: porter mixins install jq --url https://github.com/squillace/porter-jq/releases/download --version v0.1.0
+#    - name: Login to DockerHub OCI Registry
+#      uses: docker/login-action@v1
+#      with:
+#        username: ${{ secrets.DOCKER_USERNAME }}
+#        password: ${{ secrets.DOCKER_PASSWORD }}
 
-    - name: Porter publish to Docker Hub
-      run: porter publish
+#    - name: Porter publish to Docker Hub
+#      run: porter publish
 
     - name: Setup Porter
       uses: deislabs/porter-gh-action@v0.1.1
@@ -127,8 +127,9 @@ jobs:
         password: ${{ secrets.GHCR_PASSWORD }}
     - name: Retag bundle for ghcr.io
       run: |
-        sed -i.bu 's/squillace\//ghcr.io\/microsoft\/github-accelerators\//g' ./porter.yaml
+        sed -i.bu 's/squillace\//ghcr.io\/squillace\/github-accelerators\//g' ./porter.yaml
         grep "tag:" ./porter.yaml
+        grep "version" ./porter.yaml
     - name: Porter publish to ghcr.io
       run: porter publish
 

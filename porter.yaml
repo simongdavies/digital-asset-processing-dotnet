@@ -4,7 +4,7 @@
 # Uncomment out the sections below to take full advantage of what Porter can do!
 
 name: github-accelerator
-version: 0.4.29
+version: 0.4.30
 description: "A Porter bundle that deploys infrastructure and artifacts as a single distributed application. Uninstall removes the entire solution including infrastructure."
 tag: squillace/github-accelerator 
 
@@ -20,19 +20,19 @@ mixins:
   - jq
   
 
-outputs:
-  - name: webApiName
-    description: "The resulting name for the deployment of the webapi."
-    type: string
-  - name: functionName 
-    description: "The resulting name for the deployment of the Azure Function."
-    type: string
-  - name: cleanWebName
-    description: "The resulting name for the deployment of the webapi."
-    type: string
-  - name: cleanFuncName 
-    description: "The resulting name for the deployment of the Azure Function."
-    type: string
+#outputs:
+#  - name: webApiName
+#    description: "The resulting name for the deployment of the webapi."
+#    type: string
+#  - name: functionName 
+#    description: "The resulting name for the deployment of the Azure Function."
+#    type: string
+#  - name: cleanWebName
+#    description: "The resulting name for the deployment of the webapi."
+#    type: string
+#  - name: cleanFuncName 
+#    description: "The resulting name for the deployment of the Azure Function."
+#    type: string
 install:
 
   - az:
@@ -134,11 +134,11 @@ install:
         parameters: '"@src/arm/modified-parameters.json"'
 #        parameters: '"defaultResourceNamePrefix={{ bundle.parameters.defaultResourceNamePrefix }}"'
 
-      outputs:
-        - name: webApiName
-          jsonPath: "$.[*].parameters.webApiName.value"
-        - name: functionName 
-          jsonPath: "$.[*].parameters.functionAppName.value"
+#      outputs:
+#        - name: webApiName
+#          jsonPath: "$.[*].parameters.webApiName.value"
+#        - name: functionName 
+#          jsonPath: "$.[*].parameters.functionAppName.value"
   - az:
       description: "Deploying the WebApi application..."
       suppress-output: false

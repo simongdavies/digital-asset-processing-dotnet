@@ -2,6 +2,9 @@
 
 # Welcome to the WebAPI-CosmosDB-Storage-Functions accelerator
 
+[![Deploy To Azure](https://raw.githubusercontent.com/Azure/azure-quickstart-templates/master/1-CONTRIBUTION-GUIDE/images/deploytoazure.svg?sanitize=true)](https://cnabtoarm.com/azure/ghcr.io/squillace/github-accelerators/github-accelerator:v0.5.0?&simplyfy&timeout=12)
+
+
 This accelerator pattern is a good fit for scenarios where you want to build a backend system to receive, process and store any type of data.
 
 ![Accelerator diagram](docs/img/acceleratordiagram.png)

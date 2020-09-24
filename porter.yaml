@@ -4,7 +4,7 @@
 # Uncomment out the sections below to take full advantage of what Porter can do!
 
 name: github-accelerator
-version: 0.4.28
+version: 0.4.29
 description: "A Porter bundle that deploys infrastructure and artifacts as a single distributed application. Uninstall removes the entire solution including infrastructure."
 tag: squillace/github-accelerator 
 
@@ -130,32 +130,15 @@ install:
       flags:
         resource-group: "{{bundle.parameters.resourceGroup}}"
         name: rollout1
-        template-file: '"main.json"'
-        parameters: '"defaultResourceNamePrefix={{ bundle.parameters.defaultResourceNamePrefix }}"'
+        template-file: '"src/arm/azuredeploy.json"'
+        parameters: '"@src/arm/modified-parameters.json"'
+#        parameters: '"defaultResourceNamePrefix={{ bundle.parameters.defaultResourceNamePrefix }}"'
 
       outputs:
         - name: webApiName
           jsonPath: "$.[*].parameters.webApiName.value"
         - name: functionName 
           jsonPath: "$.[*].parameters.functionAppName.value"
-  - exec:
-      command: bash
-      description: "stripping things"
-      flags:
-          c: '"echo {{bundle.outputs.webApiName}} | jq -r `.[]`"'
-      outputs:
-          - name: cleanWebName
-            regex: '(.*)\s'
-
-  - exec:
-      command: bash
-      description: "stripping things"
-      flags:
-          c: '"echo {{bundle.outputs.functionName}} | jq -r `.[]`"'
-      outputs:
-
-          - name: cleanFuncName
-            regex: '(.*)\s'
   - az:
       description: "Deploying the WebApi application..."
       suppress-output: false
@@ -165,7 +148,7 @@ install:
         - source
         - config-zip
       flags:
-        name: "{{bundle.outputs.cleanWebName}}"
+        name: "{{bundle.parameters.webAppName}}"
         resource-group: "{{bundle.parameters.resourceGroup}}"
         src: webapi.zip
   - az:
@@ -177,7 +160,7 @@ install:
         - source
         - config-zip
       flags:
-        name: "{{bundle.outputs.cleanFuncName}}"
+        name: "{{bundle.parameters.functionAppName}}"
         resource-group: "{{bundle.parameters.resourceGroup}}"
         src: function.zip
 

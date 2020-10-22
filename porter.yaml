@@ -4,9 +4,9 @@
 # Uncomment out the sections below to take full advantage of what Porter can do!
 
 name: github-accelerator
-version: 0.5.1
+version: 0.5.2
 description: "A Porter bundle that deploys infrastructure and artifacts as a single distributed application. Uninstall removes the entire solution including infrastructure."
-tag: squillace/github-accelerator 
+tag: ghcr.io/squillace/github-accelerator:image-recognizer 
 
 # If you want to customize the Dockerfile in use, uncomment the line below and update the referenced file. 
 # See https://porter.sh/custom-dockerfile/
@@ -65,60 +65,13 @@ install:
         location: "'{{bundle.parameters.region}}'"
         output: table
 
-#  - arm:
-#      description: "Install the Github Accelerator Azure Resource Manager template."
-#      type: arm
-#      template: "src/arm/azuredeploy.json"
-#      name: github-accelerator
-#      resourceGroup: "{{ bundle.parameters.resourceGroup }}"
-#      parameters:
-#        defaultResourceNamePrefix: "{{ bundle.parameters.defaultResourceNamePrefix}}"
-#        storageAccountName: "{{bundle.parameters.storageAccountName}}"
-#        cosmosAccountName: "{{bundle.parameters.cosmosAccountName}}"
-#        cosmosCollectionName: "{{bundle.parameters.cosmosCollectionName}}"
-#        cosmosDatabaseName: "{{bundle.parameters.cosmosDatabaseName}}"
-#        applicationInsightsName: "{{bundle.parameters.applicationInsightsName}}"
-#        functionAppName: "{{bundle.parameters.functionAppName}}"
-#        webAppName: "{{bundle.parameters.webAppName}}"
-#      outputs:
-#        - name: "MYSQL_HOST"
-#          key: "MYSQL_HOST"
+
   - exec:
       command: bash
       description: "Using bash file to modify parameters."
       suppress-output: true
       arguments:
         - ./modify-params.sh
-
-#  - jq:
-#      description: "Adjusting the template parameters...."
-#      arguments:
-#        - --arg 
-#        - "PREFIX {{bundle.parameters.defaultResourceNamePrefix}}"
-#        - --arg
-#        - "STORAGE {{bundle.parameters.storageAccountName}}"
-#        - --arg
-#        - "COSACCNAME {{bundle.parameters.cosmosAccountName}}"
-#        - --arg
-#        - "COSCOLLNAME {{bundle.parameters.cosmosCollectionName}}"
-#        - --arg 
-#        - "COSDBNAME {{bundle.parameters.cosmosDatabaseName}}"
-#        - --arg
-#        - "APPINS {{bundle.parameters.applicationInsightsName}}"
-#        - --arg
-#        - "FUNCNAME {{bundle.parameters.functionAppName}}"
-#        - --arg
-#        - "WEBAPPNAME {{bundle.parameters.webAppName}}"
-#        - "'{{ bundle.parameters.JQ_FILTER }}'"
-#        - 'src/arm/azuredeploy.parameters.json'
-#      output:
-#        - name: modified-params
-#          path: /src/arm/modified-params.json 
-#  - exec:
-#      command: bash
-#      description: "testing for output"
-#      flags:
-#        c: '"ls {{bundle.outputs.modified-params}}"'
 
   - az:
       description: "deploying the template imperatively"

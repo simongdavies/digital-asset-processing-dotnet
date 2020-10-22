@@ -6,7 +6,7 @@
 name: github-accelerator
 version: 0.5.2
 description: "A Porter bundle that deploys infrastructure and artifacts as a single distributed application. Uninstall removes the entire solution -- including infrastructure."
-tag: ghcr.io/squillace/github-accelerator:image-recognizer 
+tag: ghcr.io/squillace/digital-asset-processing-dotnet/image-recognizer 
 
 # If you want to customize the Dockerfile in use, uncomment the line below and update the referenced file. 
 # See https://porter.sh/custom-dockerfile/

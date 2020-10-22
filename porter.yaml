@@ -3,8 +3,8 @@
 # See https://porter.sh/author-bundles for documentation on how to configure your bundle
 # Uncomment out the sections below to take full advantage of what Porter can do!
 
-name: github-accelerator
-version: 0.5.2
+name: digital-asset-processing-dotnet
+version: 0.6.0
 description: "A Porter bundle that deploys infrastructure and artifacts as a single distributed application. Uninstall removes the entire solution -- including infrastructure."
 tag: ghcr.io/squillace/digital-asset-processing-dotnet/image-recognizer 
 
@@ -126,14 +126,33 @@ upgrade:
 
 uninstall:
   - az:
+      description: "Logging into Azure..."  
+      arguments:
+        - login
+      suppress-output: true
+      flags:
+        service-principal:
+        username: "'{{bundle.credentials.AZURE_DEPLOY_CLIENT_ID}}'"
+        password: "'{{bundle.credentials.AZURE_DEPLOY_CLIENT_SECRET}}'"
+        tenant: "'{{bundle.credentials.AZURE_DEPLOY_TENANT_ID}}'"
+        output: table
+  - az: 
+      description: "Setting the Azure subscription...."
+      suppress-output: true
+      arguments: 
+        - "account" 
+        - "set" 
+      flags:
+        subscription: "{{ bundle.credentials.AZURE_DEPLOY_SUBSCRIPTION_ID }}"
+  - az:
       description: "Deleting the entire resource group."
       arguments:
         - group 
         - delete
+        - --yes
       flags:
         name: "{{bundle.parameters.resourceGroup}}"
-        yes: ""
-        no-wait: ""
+
 
 
 # Below is an example of how to define credentials

@@ -4,7 +4,7 @@
 # Uncomment out the sections below to take full advantage of what Porter can do!
 
 name: digital-asset-processing-dotnet
-version: 0.6.1
+version: 0.6.2
 description: "A Porter bundle that deploys infrastructure and artifacts as a single distributed application. Uninstall removes the entire solution -- including infrastructure."
 tag: ghcr.io/squillace/digital-asset-processing-dotnet/image-recognizer 
 
@@ -55,7 +55,7 @@ install:
       flags:
         subscription: "{{ bundle.credentials.AZURE_DEPLOY_SUBSCRIPTION_ID }}"
   - az:
-      description: "Creating the Azure resource group if it doesn't exist...."
+      description: "Creating the Azure resource group if i t doesn't exist...."
       suppress-output: true
       arguments:
         - group
@@ -66,12 +66,12 @@ install:
         output: table
 
 
-  - exec:
-      command: bash
-      description: "Using bash file to modify parameters."
-      suppress-output: true
-      arguments:
-        - ./modify-params.sh
+#  - exec:
+#      command: bash
+#      description: "Using bash file to modify parameters."
+#      suppress-output: true
+#      arguments:
+#        - ./modify-params.sh
 
   - az:
       description: "deploying the template imperatively"
@@ -85,7 +85,7 @@ install:
         name: rollout1
         template-file: '"src/arm/azuredeploy.json"'
         parameters: '"@src/arm/modified-parameters.json"'
-#        parameters: '"defaultResourceNamePrefix={{ bundle.parameters.defaultResourceNamePrefix }}"'
+        parameters: '"defaultResourceNamePrefix={{ bundle.parameters.defaultResourceNamePrefix }}"'
 
 #      outputs:
 #        - name: webApiName

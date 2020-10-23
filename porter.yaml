@@ -4,7 +4,7 @@
 # Uncomment out the sections below to take full advantage of what Porter can do!
 
 name: digital-asset-processing-dotnet
-version: 0.6.2
+version: 0.6.3
 description: "A Porter bundle that deploys infrastructure and artifacts as a single distributed application. Uninstall removes the entire solution -- including infrastructure."
 tag: ghcr.io/squillace/digital-asset-processing-dotnet/image-recognizer 
 
@@ -163,12 +163,16 @@ credentials:
 #  - name: username
 #    env: USERNAME
   - name: AZURE_DEPLOY_CLIENT_ID
+    description: "The Azure Service Prinicipal application ID"
     env: CLIENT_ID
   - name: AZURE_DEPLOY_CLIENT_SECRET
+    description: "The Azure Service Prinicipal application secret"
     env: CLIENT_SECRET
   - name: AZURE_DEPLOY_SUBSCRIPTION_ID
+    description: "The deployment subscription ID"
     env: SUBSCRIPTION_ID
   - name: AZURE_DEPLOY_TENANT_ID
+    description: "The deployment tenant ID"
     env: TENANT_ID
 # Below is an example of how to define parameters
 # See https://porter.sh/author-bundles/#parameters
@@ -181,28 +185,4 @@ parameters:
     default: "zdemo"
   - name: defaultResourceNamePrefix
     type: string
-    default: "zdemo"
-  - name: storageAccountName
-    type: string
-    default: "zdemosta"
-  - name: cosmosAccountName
-    type: string
-    default: "zdemocosmos"
-  - name: cosmosCollectionName
-    type: string
-    default: "metadata"
-  - name: cosmosDatabaseName
-    type: string
-    default: "media"
-  - name: applicationInsightsName
-    type: string
-    default: "zdemoinsights"
-  - name: functionAppName
-    type: string
-    default: "zdemofunc"
-  - name: webAppName
-    type: string
-    default: "zdemoapi"
-  - name: JQ_FILTER
-    type: string
-    default: ""
+

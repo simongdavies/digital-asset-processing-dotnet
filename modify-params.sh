@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-
+export JQ_FILTER=".parameters.defaultResourceNamePrefix.value=$PREFIX | .parameters.storageAccountName.value=$STORAGE | .parameters.cosmosAccountName.value=$COSACCNAME | .parameters.cosmosCollectionName.value=$COSCOLLNAME | .parameters.cosmosDatabaseName.value=$COSDBNAME | .parameters.applicationInsightsName.value=$APPINS | .parameters.functionAppName.value=$FUNCNAME | .parameters.webAppName.value=$WEBAPPNAME"
 
 #sed -i.bu -e '' "s/defaultResourceNamePrefix string/defaultResourceNamePrefix string = $DEFAULTRESOURCENAMEPREFIX/g" src/arm/main.bicep
 #cat src

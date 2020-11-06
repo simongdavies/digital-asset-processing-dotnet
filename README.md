@@ -1,4 +1,6 @@
-![Build and deploy main](https://github.com/microsoft/github-accelerators/workflows/Build%20and%20deploy%20main/badge.svg) ![Build and deploy dev](https://github.com/microsoft/github-accelerators/workflows/Build%20and%20deploy%20dev/badge.svg)
+**NOTE: This repo is a POC and is not being maintained as a real Accelerator**
+
+![Build and deploy main](https://github.com/microsoft/github-accelerators/workflows/Build%20and%20deploy%20main/badge.svg)
 
 # Welcome to the WebAPI-CosmosDB-Storage-Functions accelerator
 

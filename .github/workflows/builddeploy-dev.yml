@@ -10,7 +10,10 @@ on:
       - dev 
     paths:
       - 'src/function/**'
+      - '.github/workflows/**'
       - 'src/webapi/**'
+      - 'porter.yaml'
+      - 'Dockerfile.tmpl'
 
 jobs:
   build-webapi:
@@ -80,9 +83,6 @@ jobs:
     needs: [ build-function, build-webapi ]
     steps:
     - uses: actions/checkout@v1
-    - name: Enabling porter action
-      run: |
-        echo "ACTIONS_ALLOW_UNSECURE_COMMANDS=true" >> $GITHUB_ENV
       
     - name: Zip for deployment
       run: |
@@ -98,7 +98,7 @@ jobs:
         pushd ./output/function/; zip -r ../../function.zip .; popd 
         pushd ./output/webapi/; zip -r ../../webapi.zip .; popd   
     - name: Setup Porter
-      uses: deislabs/porter-gh-action@v0.1.1
+      uses: deislabs/porter-gh-action@v0.1.3
     - name: Pull in jq mixin
       run: porter mixins install jq --url https://github.com/squillace/porter-jq/releases/download --version v0.1.0
     - uses: azure/docker-login@v1
@@ -106,8 +106,11 @@ jobs:
       with:
         username: ${{ github.repository_owner }}
         password: ${{ secrets.GHCR_PASSWORD }}
-    - name: Porter Publish
-      run: porter publish  
+    - name: Porter Build
+      run: porter build
+    - name: Porter commit tag and publish
+      run: |
+        porter publish --version $(grep -Eo "[0-9].[0-9].[0-9]+" porter.yaml)-$(git rev-list --max-count=1 HEAD) 
 
   deploy-webapi:
     name: Deploy Web Api

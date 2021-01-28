@@ -4,7 +4,7 @@
 # Uncomment out the sections below to take full advantage of what Porter can do!
 
 name: digital-asset-processing-dotnet
-version: 0.6.3
+version: 0.6.4
 description: "A Porter bundle that deploys infrastructure and artifacts as a single distributed application. Uninstall removes the entire solution -- including infrastructure."
 registry: ghcr.io/squillace 
 
@@ -17,7 +17,7 @@ mixins:
   - exec
   - arm
   - az
-  - jq
+#  - jq
   
 
 #outputs:
@@ -41,30 +41,19 @@ install:
         - login
       suppress-output: true
       flags:
-        service-principal:
-        username: "'{{bundle.credentials.AZURE_DEPLOY_CLIENT_ID}}'"
-        password: "'{{bundle.credentials.AZURE_DEPLOY_CLIENT_SECRET}}'"
-        tenant: "'{{bundle.credentials.AZURE_DEPLOY_TENANT_ID}}'"
         output: table
+        username: "'${AZURE_USER_MSI_RESOURCE_ID}'"
   - az: 
-      description: "Setting the Azure subscription...."
-      suppress-output: true
-      arguments: 
-        - "account" 
-        - "set" 
-      flags:
-        subscription: "{{ bundle.credentials.AZURE_DEPLOY_SUBSCRIPTION_ID }}"
-  - az:
-      description: "Creating the Azure resource group if i t doesn't exist...."
-      suppress-output: true
+      description: "Setting the proper resource group..."
+      suppress-output: false
       arguments:
         - group
-        - create
+        - list
       flags:
-        name: "'{{bundle.parameters.resourceGroup}}'"
-        location: "'{{bundle.parameters.region}}'"
-        output: table
-
+        output: tsv
+      outputs:
+        - name: active-resource-group
+          jsonPath: "'[0].name'"
 
 #  - exec:
 #      command: bash
@@ -81,7 +70,7 @@ install:
         - group
         - create
       flags:
-        resource-group: "{{bundle.parameters.resourceGroup}}"
+        resource-group: "{{bundle.outputs.active-resource-group}}"
         name: rollout1
         template-file: '"src/arm/azuredeploy.json"'
         parameters: '"@src/arm/modified-parameters.json"'
@@ -92,6 +81,8 @@ install:
 #          jsonPath: "$.[*].parameters.webApiName.value"
 #        - name: functionName 
 #          jsonPath: "$.[*].parameters.functionAppName.value"
+
+
   - az:
       description: "Deploying the WebApi application..."
       suppress-output: false
@@ -102,7 +93,7 @@ install:
         - config-zip
       flags:
         name: "{{bundle.parameters.webAppName}}"
-        resource-group: "{{bundle.parameters.resourceGroup}}"
+        resource-group: "{{bundle.outputs.active-resource-group}}"
         src: webapi.zip
   - az:
       description: "Deploying the Azure Function application..."
@@ -131,19 +122,9 @@ uninstall:
         - login
       suppress-output: true
       flags:
-        service-principal:
-        username: "'{{bundle.credentials.AZURE_DEPLOY_CLIENT_ID}}'"
-        password: "'{{bundle.credentials.AZURE_DEPLOY_CLIENT_SECRET}}'"
-        tenant: "'{{bundle.credentials.AZURE_DEPLOY_TENANT_ID}}'"
         output: table
-  - az: 
-      description: "Setting the Azure subscription...."
-      suppress-output: true
-      arguments: 
-        - "account" 
-        - "set" 
-      flags:
-        subscription: "{{ bundle.credentials.AZURE_DEPLOY_SUBSCRIPTION_ID }}"
+        username: "'${AZURE_USER_MSI_RESOURCE_ID}'"
+
   - az:
       description: "Deleting the entire resource group."
       arguments:
@@ -157,23 +138,12 @@ uninstall:
 
 # Below is an example of how to define credentials
 # See https://porter.sh/author-bundles/#credentials
-credentials:
-#  - name: kubeconfig
-#    path: /root/.kube/config
-#  - name: username
-#    env: USERNAME
-  - name: AZURE_DEPLOY_CLIENT_ID
-    description: "The Azure Service Prinicipal application ID"
-    env: CLIENT_ID
-  - name: AZURE_DEPLOY_CLIENT_SECRET
-    description: "The Azure Service Prinicipal application secret"
-    env: CLIENT_SECRET
-  - name: AZURE_DEPLOY_SUBSCRIPTION_ID
-    description: "The deployment subscription ID"
-    env: SUBSCRIPTION_ID
-  - name: AZURE_DEPLOY_TENANT_ID
-    description: "The deployment tenant ID"
-    env: TENANT_ID
+outputs:
+  - name: active-resource-group
+    type: string
+    description: "The resource group our managed application has available to it."
+    applyTo:
+      - "install"
 # Below is an example of how to define parameters
 # See https://porter.sh/author-bundles/#parameters
 parameters:
@@ -182,7 +152,18 @@ parameters:
     default: westus2
   - name: resourceGroup
     type: string
-    default: "zdemo"
+    description: "This is the Managed Application resource group. It is automatically passed to the uninstall."
+    applyTo:
+      - "uninstall"
+    source:
+      output: active-resource-group
   - name: defaultResourceNamePrefix
     type: string
-
+  - name: webAppName
+    description: "The name of the Web app API."
+    type: string
+    default: "zdemoapi"
+  - name: functionAppName
+    type: string
+    description: "The name of the Azure Function."
+    default: "zdemofunc"

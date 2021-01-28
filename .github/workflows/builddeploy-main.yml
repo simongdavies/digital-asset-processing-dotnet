@@ -90,7 +90,9 @@ jobs:
       run: |
         sudo apt-get install zip -y
         zip 
-
+    - name: Enabling porter action
+      run: |
+        echo "ACTIONS_ALLOW_UNSECURE_COMMANDS=true" >> $GITHUB_ENV
     - name: Get application artifacts
       uses: actions/download-artifact@v2
       with:

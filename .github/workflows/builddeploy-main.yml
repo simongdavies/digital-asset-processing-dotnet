@@ -90,9 +90,9 @@ jobs:
       run: |
         sudo apt-get install zip -y
         zip 
-    - name: Enabling porter action
-      run: |
-        echo "ACTIONS_ALLOW_UNSECURE_COMMANDS=true" >> $GITHUB_ENV
+#    - name: Enabling porter action
+#      run: |
+#        echo "ACTIONS_ALLOW_UNSECURE_COMMANDS=true" >> $GITHUB_ENV
     - name: Get application artifacts
       uses: actions/download-artifact@v2
       with:
@@ -118,7 +118,7 @@ jobs:
 #      run: porter publish
 
     - name: Setup Porter
-      uses: deislabs/porter-gh-action@v0.1.1
+      uses: deislabs/porter-gh-action@v0.1.3
     - name: Pull in jq mixin
       run: porter mixins install jq --url https://github.com/squillace/porter-jq/releases/download --version v0.1.0
     - name: Login to GitHub Packages OCI Registry
@@ -130,7 +130,7 @@ jobs:
     - name: Retag bundle for ghcr.io
       run: |
         sed -i.bu 's/squillace/${{ github.repository_owner }}/g' ./porter.yaml
-        grep "tag:" ./porter.yaml
+        grep "registry:" ./porter.yaml
         grep "version" ./porter.yaml
     - name: Porter publish to ghcr.io
       run: porter publish

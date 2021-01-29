@@ -110,7 +110,7 @@ jobs:
       run: porter build
     - name: Porter commit tag and publish
       run: |
-        porter publish --version $(grep -Eo "[0-9].[0-9].[0-9]+" porter.yaml)-$(git rev-list --max-count=1 HEAD) 
+        porter publish --tag $(grep -Eo "[0-9].[0-9].[0-9]+" porter.yaml)-$(git rev-list --max-count=1 HEAD) 
 
   deploy-webapi:
     name: Deploy Web Api

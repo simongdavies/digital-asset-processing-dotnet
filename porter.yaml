@@ -4,7 +4,7 @@
 # Uncomment out the sections below to take full advantage of what Porter can do!
 
 name: digital-asset-processing-dotnet
-version: 0.6.4
+version: 0.6.5
 description: "A Porter bundle that deploys infrastructure and artifacts as a single distributed application. Uninstall removes the entire solution -- including infrastructure."
 registry: ghcr.io/squillace 
 
@@ -52,7 +52,7 @@ install:
       flags:
         output: tsv
       outputs:
-        - name: active-resource-group
+        - name: activeresourcegroup
           jsonPath: "'[0].name'"
 
 #  - exec:
@@ -70,7 +70,7 @@ install:
         - group
         - create
       flags:
-        resource-group: "{{bundle.outputs.active-resource-group}}"
+        resource-group: "{{bundle.outputs.activeresourcegroup}}"
         name: rollout1
         template-file: '"src/arm/azuredeploy.json"'
         parameters: '"@src/arm/modified-parameters.json"'
@@ -93,7 +93,7 @@ install:
         - config-zip
       flags:
         name: "{{bundle.parameters.webAppName}}"
-        resource-group: "{{bundle.outputs.active-resource-group}}"
+        resource-group: "{{bundle.outputs.activeresourcegroup}}"
         src: webapi.zip
   - az:
       description: "Deploying the Azure Function application..."
@@ -139,7 +139,7 @@ uninstall:
 # Below is an example of how to define credentials
 # See https://porter.sh/author-bundles/#credentials
 outputs:
-  - name: active-resource-group
+  - name: activeresourcegroup
     type: string
     description: "The resource group our managed application has available to it."
     applyTo:
@@ -156,7 +156,7 @@ parameters:
     applyTo:
       - "uninstall"
     source:
-      output: active-resource-group
+      output: activeresourcegroup
   - name: defaultResourceNamePrefix
     type: string
   - name: webAppName

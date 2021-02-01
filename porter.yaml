@@ -6,7 +6,7 @@
 name: digital-asset-processing-dotnet
 version: 0.6.5
 description: "A Porter bundle that deploys infrastructure and artifacts as a single distributed application. Uninstall removes the entire solution -- including infrastructure."
-registry: ghcr.io/squillace 
+registry: cnabquickstarts.azurecr.io/porter 
 
 # If you want to customize the Dockerfile in use, uncomment the line below and update the referenced file. 
 # See https://porter.sh/custom-dockerfile/
@@ -15,7 +15,7 @@ dockerfile: Dockerfile.tmpl
 
 mixins:
   - exec
-  - arm
+# - arm
   - az
 #  - jq
   
@@ -35,25 +35,33 @@ mixins:
 #    type: string
 install:
 
-  - az:
-      description: "Logging into Azure..."  
-      arguments:
-        - login
-      suppress-output: true
-      flags:
-        output: table
-        username: "'${AZURE_USER_MSI_RESOURCE_ID}'"
-  - az: 
-      description: "Setting the proper resource group..."
-      suppress-output: false
-      arguments:
-        - group
-        - list
-      flags:
-        output: tsv
-      outputs:
-        - name: activeresourcegroup
-          jsonPath: "'[0].name'"
+  # - az:
+  #     description: "Logging into Azure..."  
+  #     arguments:
+  #       - login
+  #       - --identity
+  #       - -u
+  #       - "'${AZURE_USER_MSI_RESOURCE_ID}'"
+  #     suppress-output: false
+  #     flags:
+  #       output: table
+  - exec:
+     command: bash
+     description: "Login to Azure."
+     suppress-output: false
+     arguments:
+       - login-azure.sh
+  # - az: 
+  #     description: "Setting the proper resource group..."
+  #     suppress-output: false
+  #     arguments:
+  #       - group
+  #       - list
+  #     flags:
+  #       output: tsv
+  #     outputs:
+  #       - name: activeresourcegroup
+  #         jsonPath: "'[0].name'"
 
 #  - exec:
 #      command: bash
@@ -62,19 +70,19 @@ install:
 #      arguments:
 #        - ./modify-params.sh
 
-  - az:
-      description: "deploying the template imperatively"
-      suppress-output: false
-      arguments:
-        - deployment
-        - group
-        - create
-      flags:
-        resource-group: "{{bundle.outputs.activeresourcegroup}}"
-        name: rollout1
-        template-file: '"src/arm/azuredeploy.json"'
-        parameters: '"@src/arm/modified-parameters.json"'
-        parameters: '"defaultResourceNamePrefix={{ bundle.parameters.defaultResourceNamePrefix }}"'
+  # - az:
+  #     description: "deploying the template imperatively"
+  #     suppress-output: false
+  #     arguments:
+  #       - deployment
+  #       - group
+  #       - create
+  #     flags:
+  #       resource-group: "{{bundle.outputs.activeresourcegroup}}"
+  #       name: rollout1
+  #       template-file: '"src/arm/azuredeploy.json"'
+  #       parameters: '"@src/arm/modified-parameters.json"'
+  #       parameters: '"defaultResourceNamePrefix={{ bundle.parameters.defaultResourceNamePrefix }}"'
 
 #      outputs:
 #        - name: webApiName

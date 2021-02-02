@@ -4,7 +4,7 @@
 # Uncomment out the sections below to take full advantage of what Porter can do!
 
 name: digital-asset-processing-dotnet
-version: 0.6.5
+version: 0.6.6
 description: "A Porter bundle that deploys infrastructure and artifacts as a single distributed application. Uninstall removes the entire solution -- including infrastructure."
 registry: cnabquickstarts.azurecr.io/porter 
 
@@ -51,6 +51,9 @@ install:
      suppress-output: false
      arguments:
        - login-azure.sh
+     outputs:
+       - name: activeresourcegroup
+         path: /tmp/activeresourcegroup
   # - az: 
   #     description: "Setting the proper resource group..."
   #     suppress-output: false
@@ -113,7 +116,7 @@ install:
         - config-zip
       flags:
         name: "{{bundle.parameters.functionAppName}}"
-        resource-group: "{{bundle.parameters.resourceGroup}}"
+        resource-group: "{{bundle.outputs.activeresourcegroup}}"
         src: function.zip
 
 upgrade:
